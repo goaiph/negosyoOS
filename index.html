@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Go NegosyoOS — All-in-One Business Operating System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#0E5F58; --brand-ink:#0A423D; --brand-soft:#E3EFED; --brand-contrast:#FFFFFF;
+  --accent:#E8A33D;
+  --bg:#F3F5F4; --surface:#FFFFFF; --ink:#17211F; --muted:#5E6B68; --line:#E1E7E5;
+  --good:#188A5C; --warn:#B47A0E; --bad:#C24333;
+  --radius:14px; --shadow:0 1px 2px rgba(23,33,31,.05),0 6px 20px rgba(23,33,31,.06);
+  --font-display:"Bricolage Grotesque",sans-serif; --font-body:"Inter",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;font-size:14px}
+.num{font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- shell ---------- */
+.app{display:grid;grid-template-columns:236px 1fr;min-height:100vh}
+.side{background:linear-gradient(178deg,var(--brand-ink),color-mix(in srgb,var(--brand-ink) 82%, #000 18%));color:#fff;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.side-brand{display:flex;align-items:center;gap:10px;padding:20px 18px 16px}
+.logo-chip{width:38px;height:38px;border-radius:11px;background:var(--accent);color:var(--brand-ink);display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:15px;flex:none}
+.side-brand .bn{font-family:var(--font-display);font-weight:700;font-size:15px;line-height:1.15;letter-spacing:.01em}
+.side-brand .bt{font-size:10.5px;opacity:.62;margin-top:2px}
+.side nav{padding:6px 10px;flex:1}
+.nav-lbl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.45;padding:14px 10px 6px}
+.nav-btn{display:flex;align-items:center;gap:11px;width:100%;padding:9px 10px;border-radius:9px;color:rgba(255,255,255,.78);font-size:13.5px;font-weight:500;margin-bottom:2px;text-align:left;transition:background .15s}
+.nav-btn svg{width:17px;height:17px;flex:none;opacity:.85}
+.nav-btn:hover{background:rgba(255,255,255,.08)}
+.nav-btn.on{background:rgba(255,255,255,.14);color:#fff;box-shadow:inset 3px 0 0 var(--accent)}
+.side-foot{padding:14px 18px;font-size:11px;opacity:.55;border-top:1px solid rgba(255,255,255,.1)}
+.plan-pill{display:inline-block;background:var(--accent);color:var(--brand-ink);font-weight:700;font-size:10px;padding:2px 8px;border-radius:99px;margin-bottom:6px}
+
+.main{padding:22px 26px 60px;max-width:1180px;width:100%}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:20px;flex-wrap:wrap}
+.topbar h1{font-family:var(--font-display);font-weight:800;font-size:24px;letter-spacing:-.01em}
+.topbar .sub{color:var(--muted);font-size:12.5px;margin-top:3px}
+.live-dot{display:inline-flex;align-items:center;gap:6px;background:var(--brand-soft);color:var(--brand-ink);font-weight:600;font-size:12px;padding:6px 12px;border-radius:99px}
+.live-dot i{width:7px;height:7px;border-radius:99px;background:var(--good);animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* ---------- cards ---------- */
+.grid{display:grid;gap:14px}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px}
+.kpi .lbl{font-size:11.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.kpi .val{font-family:var(--font-display);font-weight:800;font-size:26px;margin-top:6px;letter-spacing:-.01em}
+.kpi .dl{font-size:11.5px;margin-top:5px;font-weight:600}
+.up{color:var(--good)}.dn{color:var(--bad)}.wr{color:var(--warn)}
+.card h3{font-family:var(--font-display);font-weight:700;font-size:15px;margin-bottom:12px}
+.mt{margin-top:14px}
+.badge{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:99px;white-space:nowrap}
+.b-good{background:#E2F3EA;color:var(--good)}
+.b-warn{background:#FBF0DA;color:var(--warn)}
+.b-bad{background:#FBE5E1;color:var(--bad)}
+.b-brand{background:var(--brand-soft);color:var(--brand-ink)}
+
+/* ---------- tables ---------- */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+td .pname{font-weight:600}
+td .psku{font-size:11px;color:var(--muted)}
+.ta-r{text-align:right}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:7px;font-weight:600;font-size:13px;padding:9px 15px;border-radius:10px;transition:filter .15s}
+.btn-p{background:var(--brand);color:var(--brand-contrast)}
+.btn-p:hover{filter:brightness(1.08)}
+.btn-o{border:1.5px solid var(--line);background:var(--surface);color:var(--ink)}
+.btn-o:hover{border-color:var(--brand)}
+.btn-a{background:var(--accent);color:var(--brand-ink)}
+.btn-sm{padding:5px 10px;font-size:12px;border-radius:8px}
+.iconb{width:28px;height:28px;border-radius:8px;border:1.5px solid var(--line);display:grid;place-items:center;font-weight:700;background:var(--surface)}
+.iconb:hover{border-color:var(--brand);color:var(--brand)}
+
+/* ---------- POS ---------- */
+.pos-wrap{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start}
+.search{display:flex;gap:10px;margin-bottom:14px}
+.search input{flex:1;padding:10px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface)}
+.search input:focus{border-color:var(--brand);outline:none}
+.cat-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.chip{font-size:12px;font-weight:600;padding:6px 13px;border-radius:99px;border:1.5px solid var(--line);background:var(--surface);color:var(--muted)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:var(--brand-contrast)}
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(136px,1fr));gap:11px}
+.prod{background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:12px;text-align:left;transition:border-color .12s,transform .12s;position:relative}
+.prod:hover{border-color:var(--brand);transform:translateY(-1px)}
+.prod:active{transform:scale(.97)}
+.prod .emoji{font-size:26px}
+.prod .thumb{width:100%;aspect-ratio:4/3;border-radius:9px;overflow:hidden;background:var(--bg);display:flex;align-items:center;justify-content:center}
+.prod .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.prod .thumb .emoji-fallback{font-size:30px}
+.prod .nm{font-weight:600;font-size:12.5px;margin-top:8px;line-height:1.3}
+.prod .pr{font-family:var(--font-display);font-weight:700;font-size:14px;margin-top:5px}
+.prod .st{font-size:10.5px;color:var(--muted);margin-top:2px}
+.prod.out{opacity:.45;pointer-events:none}
+.cart{position:sticky;top:20px}
+.cart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.cart-lines{max-height:320px;overflow:auto;margin:0 -6px;padding:0 6px}
+.cline{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px dashed var(--line)}
+.cline .cn{flex:1;min-width:0}.cline .cn b{font-size:12.5px;display:block}.cline .cn span{font-size:11px;color:var(--muted)}
+.qty{display:flex;align-items:center;gap:6px}
+.qty b{min-width:20px;text-align:center;font-size:13px}
+.tot-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;color:var(--muted)}
+.tot-row.big{font-size:17px;color:var(--ink);font-weight:700;font-family:var(--font-display);padding-top:8px;border-top:2px solid var(--ink);margin-top:6px}
+.empty{color:var(--muted);text-align:center;padding:26px 10px;font-size:13px}
+
+/* ---------- modal ---------- */
+.overlay{position:fixed;inset:0;background:rgba(13,22,20,.5);display:none;place-items:center;z-index:50;padding:16px}
+.overlay.show{display:grid}
+.modal{background:var(--surface);border-radius:18px;max-width:420px;width:100%;padding:24px;box-shadow:0 24px 60px rgba(0,0,0,.25);max-height:92vh;overflow:auto}
+.modal h3{font-family:var(--font-display);font-size:18px;font-weight:800;margin-bottom:14px}
+.pay-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:14px}
+.pay-opt{border:1.5px solid var(--line);border-radius:11px;padding:12px;text-align:center;font-weight:600;font-size:13px}
+.pay-opt.on{border-color:var(--brand);background:var(--brand-soft);color:var(--brand-ink)}
+.fld{margin-bottom:12px}
+.fld label{display:block;font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.fld input,.fld select{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface)}
+.fld input:focus,.fld select:focus{border-color:var(--brand);outline:none}
+.change-box{background:var(--brand-soft);border-radius:11px;padding:12px 14px;display:flex;justify-content:space-between;font-weight:700;color:var(--brand-ink);margin-bottom:14px}
+
+/* ---------- receipt ---------- */
+.receipt{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;background:#fff;border:1px dashed #bbb;border-radius:8px;padding:18px 16px;color:#222}
+.receipt .rc-head{text-align:center;margin-bottom:10px}
+.receipt .rc-logo{width:34px;height:34px;border-radius:9px;background:var(--brand);color:var(--brand-contrast);display:inline-grid;place-items:center;font-weight:800;font-family:var(--font-display);margin-bottom:6px}
+.receipt .rc-bn{font-weight:800;font-size:13px;font-family:var(--font-body)}
+.receipt hr{border:none;border-top:1px dashed #ccc;margin:8px 0}
+.receipt .rl{display:flex;justify-content:space-between;gap:8px;padding:1.5px 0}
+.receipt .rl.tot{font-weight:800;font-size:13px}
+.rc-foot{text-align:center;font-size:10.5px;color:#777;margin-top:10px}
+
+/* ---------- charts ---------- */
+.chart-wrap{overflow:hidden}
+.legend{display:flex;gap:16px;font-size:11.5px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px}
+
+/* ---------- branding studio ---------- */
+.brand-wrap{display:grid;grid-template-columns:360px 1fr;gap:16px;align-items:start}
+.preset-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.preset{border:1.5px solid var(--line);border-radius:12px;padding:11px;text-align:left;transition:border-color .12s}
+.preset:hover{border-color:var(--brand)}
+.preset.on{border-color:var(--brand);background:var(--brand-soft)}
+.preset .sw{display:flex;gap:5px;margin-bottom:7px}
+.preset .sw i{width:18px;height:18px;border-radius:6px}
+.preset b{font-size:12.5px}.preset span{display:block;font-size:10.5px;color:var(--muted);margin-top:1px}
+.color-row{display:flex;align-items:center;gap:10px}
+.color-row input[type=color]{width:46px;height:38px;border:1.5px solid var(--line);border-radius:9px;padding:2px;background:var(--surface);cursor:pointer}
+.mini-preview{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.mp-top{background:var(--brand-ink);color:#fff;padding:12px 16px;display:flex;gap:9px;align-items:center}
+.note{font-size:11.5px;color:var(--muted);line-height:1.5}
+
+/* ---------- plans ---------- */
+.plan-card{position:relative;padding-top:22px}
+.plan-card .tier{font-family:var(--font-display);font-weight:800;font-size:17px}
+.plan-card .price{font-family:var(--font-display);font-weight:800;font-size:30px;margin:8px 0 2px}
+.plan-card .per{font-size:12px;color:var(--muted)}
+.plan-card ul{list-style:none;margin:14px 0;font-size:13px}
+.plan-card li{padding:5px 0;display:flex;gap:8px;align-items:baseline}
+.plan-card li::before{content:"✓";color:var(--good);font-weight:800}
+.plan-card.feat{border:2px solid var(--brand)}
+.plan-tag{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--brand);color:var(--brand-contrast);font-size:10.5px;font-weight:700;padding:3px 12px;border-radius:99px}
+
+/* ---------- toast ---------- */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;padding:11px 20px;border-radius:12px;font-size:13px;font-weight:600;z-index:99;transition:transform .25s;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+.view{display:none;animation:fadein .25s}
+.view.on{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ---------- responsive ---------- */
+@media(max-width:960px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;bottom:0;top:auto;height:auto;width:100%;flex-direction:row;align-items:center;z-index:40;padding:0}
+  .side-brand,.nav-lbl,.side-foot{display:none}
+  .side nav{display:flex;flex:1;padding:6px;justify-content:space-around}
+  .nav-btn{flex-direction:column;gap:3px;font-size:10px;padding:7px 6px;margin:0}
+  .nav-btn.on{box-shadow:inset 0 -3px 0 var(--accent)}
+  .main{padding:16px 14px 96px}
+  .g4,.g3{grid-template-columns:repeat(2,1fr)}
+  .pos-wrap,.brand-wrap{grid-template-columns:1fr}
+  .cart{position:static}
+}
+@media(max-width:520px){.g4,.g3,.g2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="side-brand">
+      <div class="logo-chip" data-logo>BC</div>
+      <div><div class="bn" data-bizname>Barako Coffee Co.</div><div class="bt">Powered by Go NegosyoOS</div></div>
+    </div>
+    <nav>
+      <div class="nav-lbl">Operations</div>
+      <button class="nav-btn on" data-nav="dash"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>Dashboard</button>
+      <button class="nav-btn" data-nav="pos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1.5"/><circle cx="19" cy="21" r="1.5"/><path d="M2 3h3l3 13h11l2-9H7"/></svg>Point of Sale</button>
+      <button class="nav-btn" data-nav="inv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>Inventory</button>
+      <button class="nav-btn" data-nav="fin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M6 17V9m6 8V5m6 12v-6"/></svg>Finance</button>
+      <button class="nav-btn" data-nav="hr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.4 3.4-5 6.5-5s5.7 1.6 6.5 5"/><circle cx="17.5" cy="9.5" r="2.5"/><path d="M15.5 14.6c2.9.2 5 1.7 5.7 4.4"/></svg>HR & Payroll</button>
+      <div class="nav-lbl">Workspace</div>
+      <button class="nav-btn" data-nav="brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="8.5" cy="10" r="1.4"/><circle cx="15.5" cy="10" r="1.4"/><path d="M12 21c0-4 4-3.5 4-7"/></svg>Branding</button>
+      <button class="nav-btn" data-nav="plans"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.9 6.3L21 9.2l-4.9 4.4L17.4 21 12 17.6 6.6 21l1.3-7.4L3 9.2l6.1-.9L12 2z"/></svg>Subscription</button>
+    </nav>
+    <div class="side-foot"><span class="plan-pill" id="planPill">BUSINESS PLAN</span><br>owner@store.ph · Trial day 6 of 14</div>
+  </aside>
+
+  <main class="main">
+    <!-- ================= DASHBOARD ================= -->
+    <section class="view on" id="v-dash">
+      <div class="topbar">
+        <div><h1>Magandang umaga, Boss! 👋</h1><div class="sub">Here's how <b data-bizname>Barako Coffee Co.</b> is doing today — Wednesday, July 8, 2026</div></div>
+        <span class="live-dot"><i></i>Live · syncing</span>
+      </div>
+      <div class="grid g4" id="kpis"></div>
+      <div class="grid g2 mt">
+        <div class="card chart-wrap">
+          <h3>Sales — last 7 days</h3>
+          <div id="salesChart"></div>
+          <div class="legend"><span><i style="background:var(--brand)"></i>This week</span><span><i style="background:var(--line)"></i>Last week</span></div>
+        </div>
+        <div class="card">
+          <h3>Needs your attention</h3>
+          <div id="alerts"></div>
+        </div>
+      </div>
+      <div class="grid g2 mt">
+        <div class="card"><h3>Top movers today</h3><table id="topMovers"></table></div>
+        <div class="card"><h3>Recent transactions</h3><table id="recentTx"></table></div>
+      </div>
+    </section>
+
+    <!-- ================= POS ================= -->
+    <section class="view" id="v-pos">
+      <div class="topbar">
+        <div><h1>Point of Sale</h1><div class="sub">Barista: Jessa · Station 1 · Shift opened 8:02 AM</div></div>
+        <span class="badge b-brand num" id="posToday"></span>
+      </div>
+      <div class="pos-wrap">
+        <div>
+          <div class="search"><input id="posSearch" placeholder="Search product name or SKU…  (try 'kape')" aria-label="Search products"></div>
+          <div class="cat-row" id="catRow"></div>
+          <div class="prod-grid" id="prodGrid"></div>
+        </div>
+        <div class="card cart">
+          <div class="cart-head"><h3 style="margin:0">Current Sale</h3><button class="btn-sm btn btn-o" onclick="clearCart()">Clear</button></div>
+          <div class="cart-lines" id="cartLines"></div>
+          <div class="mt">
+            <div class="tot-row"><span>Subtotal</span><b class="num" id="ctSub">₱0.00</b></div>
+            <div class="tot-row"><span>Discount <button class="btn-sm btn btn-o" style="padding:2px 8px" onclick="cycleDisc()" id="discBtn">0%</button></span><b class="num" id="ctDisc">–₱0.00</b></div>
+            <div class="tot-row"><span>VAT (12% incl.)</span><b class="num" id="ctVat">₱0.00</b></div>
+            <div class="tot-row big"><span>Total</span><span class="num" id="ctTot">₱0.00</span></div>
+          </div>
+          <button class="btn btn-p mt" style="width:100%;justify-content:center;padding:13px" onclick="openPay()">Charge&nbsp;<span class="num" id="chargeAmt">₱0.00</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= INVENTORY ================= -->
+    <section class="view" id="v-inv">
+      <div class="topbar">
+        <div><h1>Inventory</h1><div class="sub">Stock levels update automatically with every POS sale</div></div>
+        <button class="btn btn-p" onclick="openAddProd()">+ Add product</button>
+      </div>
+      <div class="grid g3" id="invKpis"></div>
+      <div class="card mt"><table id="invTable"></table></div>
+      <div class="card mt"><h3>Stock movement log</h3><table id="moveLog"></table></div>
+    </section>
+
+    <!-- ================= FINANCE ================= -->
+    <section class="view" id="v-fin">
+      <div class="topbar">
+        <div><h1 id="finTitle">Finance & Accounting</h1><div class="sub" id="finSub">July 2026 · month to date · all figures live from POS & inventory</div></div>
+        <button class="btn btn-o" onclick="toast('Exported reports (demo)')">Export reports</button>
+      </div>
+
+      <!-- BASIC FINANCE (Business plan) -->
+      <div id="finBasic" style="display:none">
+        <div class="card" style="border:1.5px solid var(--accent);display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px">
+          <div style="font-size:13px;line-height:1.55"><b>🔓 Unlock full Accounting with Enterprise</b><br><span style="color:var(--muted)">Cash Flow & drawer sessions · Receivables (listahan) · Payables · Profit Insights & tax estimates</span></div>
+          <button class="btn btn-a" onclick="setPlan('Enterprise')">Upgrade to Enterprise</button>
+        </div>
+        <div class="grid g3" id="finKpisB"></div>
+        <div class="grid g2 mt">
+          <div class="card"><h3>Profit & Loss — July MTD</h3><table id="pnlB"></table></div>
+          <div class="card">
+            <h3>Sales by payment method</h3><div id="payChartB"></div>
+            <h3 class="mt">Add expense</h3>
+            <div class="fld"><label>Description</label><input id="expDescB" placeholder="e.g., Meralco bill"></div>
+            <div class="grid g2">
+              <div class="fld"><label>Amount (₱)</label><input id="expAmtB" type="number" min="1" placeholder="0.00"></div>
+              <div class="fld"><label>Category</label><select id="expCatB"><option>Utilities</option><option>Rent</option><option>Supplies</option><option>Salaries</option><option>Transport</option><option>Others</option></select></div>
+            </div>
+            <button class="btn btn-p" onclick="addExpenseB()">Record expense</button>
+          </div>
+        </div>
+        <div class="card mt"><h3>Expense log</h3><table id="expTableB"></table></div>
+      </div>
+
+      <!-- FULL ACCOUNTING (Enterprise plan) -->
+      <div id="finPro">
+      <div class="cat-row" id="finTabs"></div>
+
+      <!-- OVERVIEW -->
+      <div class="fintab" id="ft-overview">
+        <div class="grid g4" id="finKpis"></div>
+        <div class="grid g2 mt">
+          <div class="card">
+            <h3>Profit & Loss — July MTD</h3>
+            <table id="pnl"></table>
+          </div>
+          <div>
+            <div class="card">
+              <h3>Where the money went</h3>
+              <div id="expChart"></div>
+            </div>
+            <div class="card mt">
+              <h3>Sales by payment method</h3>
+              <div id="payChart"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card mt chart-wrap">
+          <h3>Revenue vs expenses — last 6 months</h3>
+          <div id="monthChart"></div>
+          <div class="legend"><span><i style="background:var(--brand)"></i>Revenue</span><span><i style="background:var(--bad)"></i>Expenses</span><span><i style="background:var(--accent)"></i>Net profit</span></div>
+        </div>
+      </div>
+
+      <!-- CASH FLOW -->
+      <div class="fintab" id="ft-cash" style="display:none">
+        <div class="grid g3" id="cashKpis"></div>
+        <div class="grid g2 mt">
+          <div class="card">
+            <h3>Cash drawer — today's session</h3>
+            <table id="drawerTable"></table>
+            <button class="btn btn-p mt" onclick="closeDrawer()">Close drawer & count cash</button>
+          </div>
+          <div class="card">
+            <h3>Cash ledger (all money in & out)</h3>
+            <table id="cashLedger"></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXPENSES -->
+      <div class="fintab" id="ft-exp" style="display:none">
+        <div class="grid g2">
+          <div class="card">
+            <h3>Add expense</h3>
+            <div class="fld"><label>Description</label><input id="expDesc" placeholder="e.g., Meralco bill"></div>
+            <div class="grid g2">
+              <div class="fld"><label>Amount (₱)</label><input id="expAmt" type="number" min="1" placeholder="0.00"></div>
+              <div class="fld"><label>Category</label><select id="expCat"><option>Utilities</option><option>Rent</option><option>Supplies</option><option>Salaries</option><option>Transport</option><option>Others</option></select></div>
+            </div>
+            <button class="btn btn-p" onclick="addExpense()">Record expense</button>
+            <p class="note mt">Tip: snap a photo of the resibo in the full version — attached automatically for your accountant.</p>
+          </div>
+          <div class="card"><h3>By category — MTD</h3><div id="expCatChart"></div></div>
+        </div>
+        <div class="card mt"><h3>Expense log</h3><table id="expTable"></table></div>
+      </div>
+
+      <!-- RECEIVABLES -->
+      <div class="fintab" id="ft-ar" style="display:none">
+        <div class="grid g3" id="arKpis"></div>
+        <div class="card mt">
+          <h3>Listahan — customers who owe you</h3>
+          <table id="arTable"></table>
+        </div>
+        <div class="card mt">
+          <h3>Add credit sale (utang)</h3>
+          <div class="grid g3">
+            <div class="fld"><label>Customer</label><input id="arName" placeholder="e.g., Aling Rosa"></div>
+            <div class="fld"><label>Amount (₱)</label><input id="arAmt" type="number" min="1" placeholder="0.00"></div>
+            <div class="fld"><label>Due date</label><input id="arDue" placeholder="e.g., Jul 15"></div>
+          </div>
+          <button class="btn btn-p" onclick="addAR()">Record utang</button>
+        </div>
+      </div>
+
+      <!-- PAYABLES -->
+      <div class="fintab" id="ft-ap" style="display:none">
+        <div class="grid g3" id="apKpis"></div>
+        <div class="card mt">
+          <h3>Bills & suppliers to pay</h3>
+          <table id="apTable"></table>
+        </div>
+      </div>
+
+      <!-- INSIGHTS -->
+      <div class="fintab" id="ft-ins" style="display:none">
+        <div class="grid g3" id="insKpis"></div>
+        <div class="grid g2 mt">
+          <div class="card">
+            <h3>Product profitability — where you actually earn</h3>
+            <table id="profitTable"></table>
+          </div>
+          <div>
+            <div class="card">
+              <h3>Decision helper</h3>
+              <div id="advice"></div>
+            </div>
+            <div class="card mt">
+              <h3>Estimated tax provision</h3>
+              <table id="taxTable"></table>
+              <p class="note mt">Estimates only, using the 8% flat income-tax option on gross sales less the ₱250k annual exemption (pro-rated). Always confirm with your accountant / BIR RDO.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div><!-- /finPro -->
+    </section>
+
+    <!-- ================= HR & PAYROLL ================= -->
+    <section class="view" id="v-hr">
+      <div class="topbar">
+        <div><h1 id="hrTitle">HR & Payroll</h1><div class="sub" id="hrSub">Cutoff: July 1–15, 2026 · payday July 15</div></div>
+        <button class="btn btn-o" id="hrExportBtn" onclick="toast('Exported payroll register — Jul 1-15.csv (demo)')">Export register</button>
+      </div>
+
+      <!-- LOCKED (non-Enterprise) -->
+      <div id="hrLocked" style="display:none">
+        <div class="card" style="text-align:center;padding:46px 22px;max-width:620px;margin:30px auto">
+          <div style="font-size:40px">🔒</div>
+          <h3 style="font-size:19px;margin:12px 0 8px">HR & Payroll is an Enterprise feature</h3>
+          <p class="note" style="max-width:440px;margin:0 auto 18px">Employee 201 files, attendance, semi-monthly payroll with SSS · PhilHealth · Pag-IBIG deductions, 13th-month accrual, and branded payslips — all computed automatically from one system.</p>
+          <button class="btn btn-a" onclick="setPlan('Enterprise')">Upgrade to Enterprise — ₱2,499/mo</button>
+          <p class="note mt">Included in Enterprise alongside the full Accounting suite.</p>
+        </div>
+      </div>
+
+      <!-- FULL HRIS (Enterprise) -->
+      <div id="hrPro">
+        <div class="cat-row" id="hrTabs"></div>
+
+        <div class="hrtab" id="ht-emp">
+          <div class="grid g3" id="hrKpis"></div>
+          <div class="card mt"><h3>Employee directory</h3><table id="empTable"></table></div>
+          <div class="card mt">
+            <h3>Add employee</h3>
+            <div class="grid g3">
+              <div class="fld"><label>Full name</label><input id="emName" placeholder="e.g., Juan Dela Cruz"></div>
+              <div class="fld"><label>Role</label><input id="emRole" placeholder="e.g., Barista"></div>
+              <div class="fld"><label>Daily rate (₱)</label><input id="emRate" type="number" min="1" placeholder="e.g., 610"></div>
+            </div>
+            <button class="btn btn-p" onclick="addEmp()">Add to payroll</button>
+          </div>
+        </div>
+
+        <div class="hrtab" id="ht-att" style="display:none">
+          <div class="grid g3" id="attKpis"></div>
+          <div class="card mt"><h3>Today's attendance — July 8</h3><table id="attTable"></table></div>
+          <p class="note mt" style="padding:0 4px">In the full version, staff time in/out from the POS terminal or their phone; late/undertime rules apply automatically to payroll.</p>
+        </div>
+
+        <div class="hrtab" id="ht-pay" style="display:none">
+          <div class="grid g3" id="payKpis"></div>
+          <div class="card mt">
+            <h3>Payroll run — July 1–15 cutoff</h3>
+            <table id="payrollTable"></table>
+            <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+              <button class="btn btn-p" onclick="runPayroll()">✓ Approve & release payroll</button>
+              <button class="btn btn-o" onclick="toast('Payslips sent to all employees via SMS/email (demo)')">Send all payslips</button>
+            </div>
+            <p class="note mt">Government deductions are simplified demo estimates (SSS 4.5% EE · PhilHealth 2.5% EE · Pag-IBIG ₱200 · withholding on the 8%/graduated basis). The production build uses the official contribution tables.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= BRANDING ================= -->
+    <section class="view" id="v-brand">
+      <div class="topbar">
+        <div><h1>Branding Studio</h1><div class="sub">Make Go NegosyoOS look like <i>your</i> business — changes apply instantly, everywhere</div></div>
+      </div>
+      <div class="brand-wrap">
+        <div class="card">
+          <h3>Your identity</h3>
+          <div class="fld"><label>Business name</label><input id="bizName" value="Barako Coffee Co." maxlength="26"></div>
+          <div class="fld"><label>Logo initials</label><input id="bizInit" value="BC" maxlength="2" style="width:80px;text-transform:uppercase"></div>
+          <div class="fld"><label>Brand color</label>
+            <div class="color-row"><input type="color" id="brandColor" value="#0E5F58"><span class="note">Text contrast is auto-adjusted so your receipts and buttons always stay readable.</span></div>
+          </div>
+          <div class="fld"><label>Accent color</label>
+            <div class="color-row"><input type="color" id="accentColor" value="#E8A33D"><span class="note">Used for highlights, alerts and the logo chip.</span></div>
+          </div>
+          <h3 class="mt">Theme presets</h3>
+          <div class="preset-grid" id="presets"></div>
+          <p class="note mt">🔒 Branding changes only the look. Your data, features and security stay on the same battle-tested core — that's the Go NegosyoOS promise.</p>
+        </div>
+        <div>
+          <div class="card">
+            <h3>Live preview — your workspace</h3>
+            <div class="mini-preview">
+              <div class="mp-top"><div class="logo-chip" data-logo style="width:30px;height:30px;font-size:12px">BC</div><b data-bizname style="font-family:var(--font-display)">Barako Coffee Co.</b></div>
+              <div style="padding:14px;display:flex;gap:10px;flex-wrap:wrap">
+                <button class="btn btn-p btn-sm">Primary action</button>
+                <button class="btn btn-a btn-sm">Accent action</button>
+                <span class="badge b-brand" style="align-self:center">Brand badge</span>
+              </div>
+            </div>
+          </div>
+          <div class="card mt">
+            <h3>Live preview — customer receipt</h3>
+            <div class="receipt" style="max-width:300px;margin:0 auto">
+              <div class="rc-head"><div class="rc-logo" data-logo>BC</div><div class="rc-bn" data-bizname>Barako Coffee Co.</div><div style="font-size:10.5px;color:#777">San Fernando, Pampanga · 0917-000-0000</div></div>
+              <hr>
+              <div class="rl"><span>Caramel Macchiato ×1</span><span>₱150.00</span></div>
+              <div class="rl"><span>Butter Croissant ×1</span><span>₱75.00</span></div>
+              <hr>
+              <div class="rl tot"><span>TOTAL</span><span>₱225.00</span></div>
+              <div class="rl"><span>Cash</span><span>₱300.00</span></div>
+              <div class="rl"><span>Change</span><span>₱75.00</span></div>
+              <div class="rc-foot">Salamat po! · Powered by Go NegosyoOS</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PLANS ================= -->
+    <section class="view" id="v-plans">
+      <div class="topbar"><div><h1>Subscription</h1><div class="sub">Simple monthly pricing · 14-day free trial · cancel anytime</div></div></div>
+      <div class="grid g3">
+        <div class="card plan-card">
+          <div class="tier">Starter</div><div class="price num">₱499</div><div class="per">per month</div>
+          <ul><li>POS + Inventory + Dashboard</li><li>2 users · 300 products</li><li>Logo & preset themes</li><li>Email support</li></ul>
+          <button class="btn btn-o" style="width:100%;justify-content:center" onclick="setPlan('Starter')">Choose Starter</button>
+        </div>
+        <div class="card plan-card feat">
+          <span class="plan-tag">MOST POPULAR</span>
+          <div class="tier">Business</div><div class="price num">₱999</div><div class="per">per month</div>
+          <ul><li>Everything in Starter</li><li>Full Finance module & P&L</li><li>5 users · 2,000 products</li><li>Full brand colors + branded receipts</li><li>Chat support</li></ul>
+          <button class="btn btn-p" style="width:100%;justify-content:center" onclick="setPlan('Business')">Choose Business</button>
+        </div>
+        <div class="card plan-card">
+          <div class="tier">Enterprise</div><div class="price num">₱2,499</div><div class="per">per month</div>
+          <ul><li>Everything in Business</li><li>Full Accounting suite</li><li>HRIS & Payroll (PH-compliant)</li><li>Unlimited users & products</li><li>Multi-branch ready</li><li>Custom subdomain</li><li>Dedicated success manager</li></ul>
+          <button class="btn btn-o" style="width:100%;justify-content:center" onclick="setPlan('Enterprise')">Choose Enterprise</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- payment modal -->
+<div class="overlay" id="payOverlay">
+  <div class="modal">
+    <h3>Payment · <span class="num" id="payTotal"></span></h3>
+    <div class="pay-grid" id="payMethods"></div>
+    <div class="fld" id="cashFld"><label>Cash received (₱)</label><input type="number" id="cashIn" min="0" placeholder="0.00"></div>
+    <div class="change-box" id="changeBox" style="display:none"><span>Change</span><span class="num" id="changeVal"></span></div>
+    <div style="display:flex;gap:10px"><button class="btn btn-o" style="flex:1;justify-content:center" onclick="closePay()">Cancel</button><button class="btn btn-p" style="flex:2;justify-content:center" onclick="completeSale()">Complete sale</button></div>
+  </div>
+</div>
+
+<!-- receipt modal -->
+<div class="overlay" id="rcOverlay">
+  <div class="modal">
+    <h3>Sale completed ✓</h3>
+    <div class="receipt" id="rcBody"></div>
+    <div style="display:flex;gap:10px;margin-top:16px"><button class="btn btn-o" style="flex:1;justify-content:center" onclick="toast('Sent to thermal printer (demo)')">Print</button><button class="btn btn-p" style="flex:1;justify-content:center" onclick="closeRc()">New sale</button></div>
+  </div>
+</div>
+
+<!-- add product modal -->
+<div class="overlay" id="apOverlay">
+  <div class="modal">
+    <h3>Add product</h3>
+    <div class="fld"><label>Product name</label><input id="apName" placeholder="e.g., Suka 350ml"></div>
+    <div class="grid g2">
+      <div class="fld"><label>Cost (₱)</label><input id="apCost" type="number" min="0" placeholder="0.00"></div>
+      <div class="fld"><label>Price (₱)</label><input id="apPrice" type="number" min="0" placeholder="0.00"></div>
+    </div>
+    <div class="grid g2">
+      <div class="fld"><label>Initial stock</label><input id="apStock" type="number" min="0" value="20"></div>
+      <div class="fld"><label>Reorder point</label><input id="apRe" type="number" min="0" value="10"></div>
+    </div>
+    <div class="fld"><label>Category</label><select id="apCat"><option>Beverages</option><option>Snacks</option><option>Canned & Instant</option><option>Personal Care</option><option>Household</option></select></div>
+    <div style="display:flex;gap:10px"><button class="btn btn-o" style="flex:1;justify-content:center" onclick="closeAddProd()">Cancel</button><button class="btn btn-p" style="flex:1;justify-content:center" onclick="saveProd()">Save product</button></div>
+  </div>
+</div>
+
+<!-- payslip modal -->
+<div class="overlay" id="psOverlay">
+  <div class="modal">
+    <h3>Payslip</h3>
+    <div class="receipt" id="psBody"></div>
+    <div style="display:flex;gap:10px;margin-top:16px"><button class="btn btn-o" style="flex:1;justify-content:center" onclick="toast('Payslip PDF downloaded (demo)')">Download PDF</button><button class="btn btn-p" style="flex:1;justify-content:center" onclick="$('#psOverlay').classList.remove('show')">Close</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= STATE (in-memory, single source of truth) ================= */
+const peso = n => '₱' + n.toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2});
+const peso0 = n => '₱' + Math.round(n).toLocaleString('en-PH');
+
+let products = [
+  {id:1, name:'Kapeng Barako (Hot)', sku:'COF-001', cat:'Coffee', emoji:'☕', img:'https://images.pexels.com/photos/4264049/pexels-photo-4264049.jpeg?auto=compress&cs=tinysrgb&w=400', cost:35, price:95,  stock:40, re:15, sold:62},
+  {id:2, name:'Caramel Macchiato',   sku:'COF-002', cat:'Coffee', emoji:'☕', img:'https://images.pexels.com/photos/5305639/pexels-photo-5305639.jpeg?auto=compress&cs=tinysrgb&w=400', cost:55, price:150, stock:25, re:10, sold:48},
+  {id:3, name:'Cafe Latte',          sku:'COF-003', cat:'Coffee', emoji:'☕', img:'https://images.pexels.com/photos/30630942/pexels-photo-30630942.jpeg?auto=compress&cs=tinysrgb&w=400', cost:48, price:135, stock:30, re:12, sold:55},
+  {id:4, name:'Spanish Latte',       sku:'COF-004', cat:'Coffee', emoji:'☕', img:'https://images.pexels.com/photos/11136849/pexels-photo-11136849.jpeg?auto=compress&cs=tinysrgb&w=400', cost:50, price:140, stock:5,  re:12, sold:40},
+  {id:5, name:'Matcha Latte',        sku:'NC-001',  cat:'Non-Coffee', emoji:'🍵', img:'https://images.pexels.com/photos/32972501/pexels-photo-32972501.jpeg?auto=compress&cs=tinysrgb&w=400', cost:60, price:160, stock:18, re:10, sold:22},
+  {id:6, name:'Hot Chocolate',       sku:'NC-002',  cat:'Non-Coffee', emoji:'🍫', img:'https://images.pexels.com/photos/29325671/pexels-photo-29325671.jpeg?auto=compress&cs=tinysrgb&w=400', cost:45, price:120, stock:20, re:10, sold:15},
+  {id:7, name:'Fresh Milk Tea',      sku:'NC-003',  cat:'Non-Coffee', emoji:'🧋', img:'https://images.pexels.com/photos/12666797/pexels-photo-12666797.jpeg?auto=compress&cs=tinysrgb&w=400', cost:42, price:110, stock:0,  re:10, sold:30},
+  {id:8, name:'Butter Croissant',    sku:'PST-001', cat:'Pastries', emoji:'🥐', img:'https://images.pexels.com/photos/8105045/pexels-photo-8105045.jpeg?auto=compress&cs=tinysrgb&w=400', cost:35, price:75,  stock:22, re:10, sold:33},
+  {id:9, name:'Choco Muffin',        sku:'PST-002', cat:'Pastries', emoji:'🧁', img:'https://images.pexels.com/photos/131899/pexels-photo-131899.jpeg?auto=compress&cs=tinysrgb&w=400', cost:28, price:65,  stock:15, re:8,  sold:20},
+  {id:10,name:'Ensaymada',           sku:'PST-003', cat:'Pastries', emoji:'🍞', img:'https://images.pexels.com/photos/1287278/pexels-photo-1287278.jpeg?auto=compress&cs=tinysrgb&w=400', cost:20, price:45,  stock:30, re:10, sold:18},
+  {id:11,name:'Coffee Beans 250g',   sku:'RTL-001', cat:'Retail', emoji:'🛍️', img:'https://images.pexels.com/photos/18138946/pexels-photo-18138946.jpeg?auto=compress&cs=tinysrgb&w=400', cost:180,price:320, stock:12, re:5,  sold:6},
+  {id:12,name:'Tumbler 500ml',       sku:'RTL-002', cat:'Retail', emoji:'🥤', img:'https://images.pexels.com/photos/20138581/pexels-photo-20138581.jpeg?auto=compress&cs=tinysrgb&w=400', cost:150,price:280, stock:9,  re:5,  sold:3},
+];
+let cart = [];            // {id, qty}
+let discPct = 0;
+let payMethod = 'Cash';
+let salesToday = 12480;   // seed MTD-style numbers
+let txToday = 47;
+let txLog = [
+  {t:'10:42 AM', items:3, total:186, m:'GCash'},
+  {t:'10:31 AM', items:1, total:75,  m:'Cash'},
+  {t:'10:18 AM', items:6, total:412, m:'Cash'},
+  {t:'9:55 AM',  items:2, total:64,  m:'Maya'},
+  {t:'9:47 AM',  items:4, total:238, m:'Cash'},
+];
+let moves = [
+  {t:'10:42 AM', p:'Fresh Milk Tea', type:'Sale', q:-3},
+  {t:'9:30 AM',  p:'Kapeng Barako (Hot)', type:'Restock', q:+50},
+  {t:'9:12 AM',  p:'Spanish Latte', type:'Sale', q:-2},
+  {t:'Yesterday',p:'Matcha Latte', type:'Adjustment', q:-1},
+];
+let expenses = [
+  {d:'Jul 7', desc:'Meralco bill', cat:'Utilities', amt:3850},
+  {d:'Jul 5', desc:'Store rent — July', cat:'Rent', amt:8000},
+  {d:'Jul 3', desc:'Cups, lids & napkins', cat:'Supplies', amt:640},
+  {d:'Jul 1', desc:'Staff salary — 1st half', cat:'Salaries', amt:9500},
+];
+const weekThis = [8200, 9100, 7600, 10400, 11250, 13900, 12480];
+const weekLast = [7400, 8300, 8100, 9200, 9800, 12100, 10900];
+const payMix = [{m:'Cash',v:58},{m:'GCash',v:27},{m:'Maya',v:9},{m:'Card',v:6}];
+const mtdRevenue = 86420, mtdCogs = 51850;
+
+/* ================= HELPERS ================= */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('show'),2400);}
+function stockBadge(p){ if(p.stock===0) return '<span class="badge b-bad">Out of stock</span>'; if(p.stock<=p.re) return '<span class="badge b-warn">Low · '+p.stock+' left</span>'; return '<span class="badge b-good">In stock · '+p.stock+'</span>'; }
+
+/* ================= NAV ================= */
+$$('.nav-btn').forEach(b=>b.onclick=()=>{
+  $$('.nav-btn').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+  $$('.view').forEach(v=>v.classList.remove('on')); $('#v-'+b.dataset.nav).classList.add('on');
+  window.scrollTo({top:0});
+});
+
+/* ================= DASHBOARD ================= */
+function renderDash(){
+  const low = products.filter(p=>p.stock>0&&p.stock<=p.re).length;
+  const out = products.filter(p=>p.stock===0).length;
+  const exp = expenses.reduce((a,e)=>a+e.amt,0);
+  const net = mtdRevenue - mtdCogs - exp;
+  $('#kpis').innerHTML = `
+    <div class="card kpi"><div class="lbl">Sales today</div><div class="val num">${peso0(salesToday)}</div><div class="dl up">▲ 14.5% vs last Wed</div></div>
+    <div class="card kpi"><div class="lbl">Transactions</div><div class="val num">${txToday}</div><div class="dl up">▲ Avg basket ${peso0(salesToday/txToday)}</div></div>
+    <div class="card kpi"><div class="lbl">Stock alerts</div><div class="val num">${low+out}</div><div class="dl ${low+out?'wr':'up'}">${low} low · ${out} out</div></div>
+    <div class="card kpi"><div class="lbl">Net profit · MTD</div><div class="val num">${peso0(net)}</div><div class="dl up">▲ ${(net/mtdRevenue*100).toFixed(1)}% margin</div></div>`;
+  // alerts
+  const al = [];
+  products.filter(p=>p.stock===0).forEach(p=>al.push(`<span class="badge b-bad">OUT</span> <b>${p.name}</b> — customers asked ${p.sold} times this week. <button class="btn btn-sm btn-o" onclick="goRestock(${p.id})">Restock</button>`));
+  products.filter(p=>p.stock>0&&p.stock<=p.re).forEach(p=>al.push(`<span class="badge b-warn">LOW</span> <b>${p.name}</b> — ${p.stock} left, reorder at ${p.re}. <button class="btn btn-sm btn-o" onclick="goRestock(${p.id})">Restock</button>`));
+  al.push(`<span class="badge b-brand">TIP</span> Rush hours are <b>7–9 AM</b> and <b>3–5 PM</b> — schedule your best barista then.`);
+  $('#alerts').innerHTML = al.map(x=>`<div style="padding:9px 0;border-bottom:1px dashed var(--line);font-size:13px;line-height:1.6">${x}</div>`).join('');
+  // top movers
+  const top=[...products].sort((a,b)=>b.sold-a.sold).slice(0,5);
+  $('#topMovers').innerHTML = '<tr><th>Product</th><th class="ta-r">Sold</th><th class="ta-r">Revenue</th></tr>'+
+    top.map(p=>`<tr><td><span class="pname">${p.emoji} ${p.name}</span></td><td class="ta-r num">${p.sold}</td><td class="ta-r num">${peso0(p.sold*p.price)}</td></tr>`).join('');
+  $('#recentTx').innerHTML = '<tr><th>Time</th><th>Items</th><th>Method</th><th class="ta-r">Total</th></tr>'+
+    txLog.slice(0,6).map(t=>`<tr><td>${t.t}</td><td class="num">${t.items}</td><td><span class="badge b-brand">${t.m}</span></td><td class="ta-r num">${peso(t.total)}</td></tr>`).join('');
+  renderSalesChart();
+}
+function goRestock(id){ $$('.nav-btn').find(b=>b.dataset.nav==='inv').click(); toast('Tap ＋ beside the product to receive stock'); }
+function renderSalesChart(){
+  const W=460,H=180,P=28,max=Math.max(...weekThis,...weekLast)*1.12;
+  const x=i=>P+i*(W-2*P)/6, y=v=>H-18-(v/max)*(H-40);
+  const path=a=>a.map((v,i)=>(i?'L':'M')+x(i)+','+y(v)).join(' ');
+  const days=['Thu','Fri','Sat','Sun','Mon','Tue','Today'];
+  $('#salesChart').innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">
+    <path d="${path(weekLast)}" fill="none" stroke="var(--line)" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="${path(weekThis)} L${x(6)},${H-18} L${x(0)},${H-18} Z" fill="var(--brand)" opacity="0.08"/>
+    <path d="${path(weekThis)}" fill="none" stroke="var(--brand)" stroke-width="3" stroke-linecap="round"/>
+    ${weekThis.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="3.5" fill="var(--brand)"/>`).join('')}
+    ${days.map((d,i)=>`<text x="${x(i)}" y="${H-2}" font-size="10" fill="var(--muted)" text-anchor="middle" font-family="Inter">${d}</text>`).join('')}
+    <text x="${x(6)}" y="${y(weekThis[6])-10}" font-size="11" font-weight="700" fill="var(--brand)" text-anchor="middle" font-family="Inter">${peso0(weekThis[6])}</text>
+  </svg>`;
+}
+
+/* ================= POS ================= */
+let activeCat='All';
+function renderCats(){
+  const cats=['All',...new Set(products.map(p=>p.cat))];
+  $('#catRow').innerHTML=cats.map(c=>`<button class="chip ${c===activeCat?'on':''}" onclick="setCat('${c}')">${c}</button>`).join('');
+}
+function setCat(c){activeCat=c;renderCats();renderProds();}
+function renderProds(){
+  const q=($('#posSearch').value||'').toLowerCase();
+  const list=products.filter(p=>(activeCat==='All'||p.cat===activeCat)&&(p.name.toLowerCase().includes(q)||p.sku.toLowerCase().includes(q)));
+  $('#prodGrid').innerHTML=list.map(p=>`
+    <button class="prod ${p.stock===0?'out':''}" onclick="addToCart(${p.id})">
+      <div class="thumb"><img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.parentElement.innerHTML='&lt;span class=&quot;emoji-fallback&quot;&gt;${p.emoji}&lt;/span&gt;'"></div><div class="nm">${p.name}</div>
+      <div class="pr num">${peso(p.price)}</div><div class="st">${p.stock===0?'Out of stock':p.stock+' in stock'}</div>
+    </button>`).join('')||'<div class="empty">No products match your search.</div>';
+  $('#posToday').textContent='Today: '+peso0(salesToday)+' · '+txToday+' sales';
+}
+function addToCart(id){
+  const p=products.find(x=>x.id===id);
+  const line=cart.find(c=>c.id===id);
+  const inCart=line?line.qty:0;
+  if(inCart>=p.stock){toast('Only '+p.stock+' in stock for '+p.name);return;}
+  line?line.qty++:cart.push({id,qty:1});
+  renderCart();
+}
+function chQty(id,d){const l=cart.find(c=>c.id===id);const p=products.find(x=>x.id===id);
+  if(!l)return; l.qty+=d;
+  if(l.qty<=0)cart=cart.filter(c=>c.id!==id);
+  if(l.qty>p.stock){l.qty=p.stock;toast('Stock limit reached');}
+  renderCart();}
+function clearCart(){cart=[];discPct=0;$('#discBtn').textContent='0%';renderCart();}
+function cycleDisc(){discPct=(discPct+5)%25;$('#discBtn').textContent=discPct+'%';renderCart();}
+function cartTotals(){
+  const sub=cart.reduce((a,c)=>a+products.find(p=>p.id===c.id).price*c.qty,0);
+  const disc=sub*discPct/100, tot=sub-disc, vat=tot*12/112;
+  return {sub,disc,tot,vat};
+}
+function renderCart(){
+  $('#cartLines').innerHTML=cart.length?cart.map(c=>{
+    const p=products.find(x=>x.id===c.id);
+    return `<div class="cline"><div class="cn"><b>${p.name}</b><span class="num">${peso(p.price)} each</span></div>
+      <div class="qty"><button class="iconb" onclick="chQty(${c.id},-1)">−</button><b class="num">${c.qty}</b><button class="iconb" onclick="chQty(${c.id},1)">＋</button></div>
+      <b class="num" style="min-width:64px;text-align:right">${peso(p.price*c.qty)}</b></div>`;}).join('')
+    :'<div class="empty">Cart is empty.<br>Tap a product to begin.</div>';
+  const t=cartTotals();
+  $('#ctSub').textContent=peso(t.sub);$('#ctDisc').textContent='–'+peso(t.disc);
+  $('#ctVat').textContent=peso(t.vat);$('#ctTot').textContent=peso(t.tot);$('#chargeAmt').textContent=peso(t.tot);
+}
+/* payment */
+function openPay(){
+  if(!cart.length){toast('Cart is empty — add products first');return;}
+  $('#payTotal').textContent=peso(cartTotals().tot);
+  renderPayMethods();$('#cashIn').value='';updChange();
+  $('#payOverlay').classList.add('show');
+  if(payMethod==='Cash')setTimeout(()=>$('#cashIn').focus(),50);
+}
+function closePay(){$('#payOverlay').classList.remove('show');}
+function renderPayMethods(){
+  $('#payMethods').innerHTML=['Cash','GCash','Maya','Card'].map(m=>`<button class="pay-opt ${m===payMethod?'on':''}" onclick="setPay('${m}')">${m==='Cash'?'💵':m==='GCash'?'📱':m==='Maya'?'💚':'💳'} ${m}</button>`).join('');
+  $('#cashFld').style.display=payMethod==='Cash'?'block':'none';
+  $('#changeBox').style.display='none';
+}
+function setPay(m){payMethod=m;renderPayMethods();updChange();}
+function updChange(){
+  if(payMethod!=='Cash')return;
+  const got=parseFloat($('#cashIn').value)||0,tot=cartTotals().tot;
+  const show=got>=tot&&tot>0;
+  $('#changeBox').style.display=show?'flex':'none';
+  if(show)$('#changeVal').textContent=peso(got-tot);
+}
+document.addEventListener('input',e=>{if(e.target.id==='cashIn')updChange();if(e.target.id==='posSearch')renderProds();});
+function completeSale(){
+  const t=cartTotals();
+  if(payMethod==='Cash'){const got=parseFloat($('#cashIn').value)||0;
+    if(got<t.tot){toast('Cash received is less than the total');return;}}
+  // deduct stock + log movements (POS-05: atomic in real build)
+  const lines=cart.map(c=>{const p=products.find(x=>x.id===c.id);p.stock-=c.qty;p.sold+=c.qty;
+    moves.unshift({t:'Just now',p:p.name,type:'Sale',q:-c.qty});
+    return {name:p.name,qty:c.qty,amt:p.price*c.qty};});
+  salesToday+=t.tot;txToday++;
+  cashOnHand+=t.tot;
+  if(payMethod==='Cash'){drawer.cashSales+=t.tot;cashFlow.unshift({t:'Just now',desc:'Cash sale (POS)',in:Math.round(t.tot),out:0});}
+  txLog.unshift({t:'Just now',items:cart.reduce((a,c)=>a+c.qty,0),total:t.tot,m:payMethod});
+  const got=payMethod==='Cash'?(parseFloat($('#cashIn').value)||0):t.tot;
+  // receipt
+  $('#rcBody').innerHTML=`
+    <div class="rc-head"><div class="rc-logo">${$('#bizInit').value.toUpperCase()}</div><div class="rc-bn">${$('#bizName').value}</div>
+    <div style="font-size:10.5px;color:#777">OR# ${String(100000+txToday)} · ${new Date().toLocaleString('en-PH',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})}</div></div><hr>
+    ${lines.map(l=>`<div class="rl"><span>${l.name} ×${l.qty}</span><span class="num">${peso(l.amt)}</span></div>`).join('')}
+    ${t.disc?`<div class="rl"><span>Discount ${discPct}%</span><span class="num">–${peso(t.disc)}</span></div>`:''}
+    <hr><div class="rl tot"><span>TOTAL</span><span class="num">${peso(t.tot)}</span></div>
+    <div class="rl"><span>${payMethod}</span><span class="num">${peso(got)}</span></div>
+    ${payMethod==='Cash'?`<div class="rl"><span>Change</span><span class="num">${peso(got-t.tot)}</span></div>`:''}
+    <div class="rl" style="color:#777"><span>VAT (12% incl.)</span><span class="num">${peso(t.vat)}</span></div>
+    <div class="rc-foot">Salamat po! · Powered by Go NegosyoOS</div>`;
+  clearCart();closePay();
+  $('#rcOverlay').classList.add('show');
+  renderProds();renderDash();renderInv();renderFin();
+}
+function closeRc(){$('#rcOverlay').classList.remove('show');}
+
+/* ================= INVENTORY ================= */
+function renderInv(){
+  const low=products.filter(p=>p.stock>0&&p.stock<=p.re),out=products.filter(p=>p.stock===0);
+  const val=products.reduce((a,p)=>a+p.stock*p.cost,0);
+  $('#invKpis').innerHTML=`
+    <div class="card kpi"><div class="lbl">Products</div><div class="val num">${products.length}</div><div class="dl">Across ${new Set(products.map(p=>p.cat)).size} categories</div></div>
+    <div class="card kpi"><div class="lbl">Stock value at cost</div><div class="val num">${peso0(val)}</div><div class="dl up">Live valuation</div></div>
+    <div class="card kpi"><div class="lbl">Attention needed</div><div class="val num">${low.length+out.length}</div><div class="dl ${low.length+out.length?'wr':'up'}">${low.length} low · ${out.length} out of stock</div></div>`;
+  const sorted=[...products].sort((a,b)=>(a.stock===0?-1:a.stock<=a.re?0:1)-(b.stock===0?-1:b.stock<=b.re?0:1));
+  $('#invTable').innerHTML='<tr><th>Product</th><th>Category</th><th class="ta-r">Cost</th><th class="ta-r">Price</th><th>Status</th><th class="ta-r">Receive</th></tr>'+
+    sorted.map(p=>`<tr><td><span class="pname">${p.emoji} ${p.name}</span><br><span class="psku">${p.sku}</span></td>
+    <td>${p.cat}</td><td class="ta-r num">${peso(p.cost)}</td><td class="ta-r num">${peso(p.price)}</td>
+    <td>${stockBadge(p)}</td>
+    <td class="ta-r"><button class="iconb" title="Receive 10 units" onclick="restock(${p.id})">＋</button></td></tr>`).join('');
+  $('#moveLog').innerHTML='<tr><th>When</th><th>Product</th><th>Type</th><th class="ta-r">Qty</th></tr>'+
+    moves.slice(0,8).map(m=>`<tr><td>${m.t}</td><td>${m.p}</td><td><span class="badge ${m.type==='Sale'?'b-brand':m.type==='Restock'?'b-good':'b-warn'}">${m.type}</span></td><td class="ta-r num" style="color:${m.q<0?'var(--bad)':'var(--good)'}">${m.q>0?'+':''}${m.q}</td></tr>`).join('');
+}
+function restock(id){const p=products.find(x=>x.id===id);p.stock+=10;
+  moves.unshift({t:'Just now',p:p.name,type:'Restock',q:+10});
+  toast('Received 10 × '+p.name);renderInv();renderDash();renderProds();}
+function openAddProd(){$('#apOverlay').classList.add('show');setTimeout(()=>$('#apName').focus(),50);}
+function closeAddProd(){$('#apOverlay').classList.remove('show');}
+function saveProd(){
+  const n=$('#apName').value.trim(),c=+$('#apCost').value,pr=+$('#apPrice').value,s=+$('#apStock').value,r=+$('#apRe').value;
+  if(!n||!pr){toast('Product name and price are required');return;}
+  if(c&&pr<=c){toast('Heads up: price is not above cost — no margin');}
+  products.push({id:Date.now(),name:n,sku:'NEW-'+String(products.length+1).padStart(3,'0'),cat:$('#apCat').value,emoji:'📦',cost:c||0,price:pr,stock:s||0,re:r||10,sold:0});
+  moves.unshift({t:'Just now',p:n,type:'Restock',q:+(s||0)});
+  closeAddProd();toast('"'+n+'" added to catalog');
+  ['apName','apCost','apPrice'].forEach(i=>$('#'+i).value='');
+  renderInv();renderProds();renderCats();renderDash();
+}
+
+/* ================= FINANCE & ACCOUNTING ================= */
+let receivables = [
+  {name:'Aling Rosa', date:'Jun 18', due:'Jul 2',  amt:850,  paid:false},
+  {name:'Kuya Ben (regular)', date:'Jun 30', due:'Jul 10', amt:420,  paid:false},
+  {name:'Tita Marites', date:'Jul 3',  due:'Jul 17', amt:1260, paid:false},
+  {name:'Mang Ador', date:'Jun 12', due:'Jun 26', amt:300,  paid:true},
+];
+let payables = [
+  {sup:'Green Bean Supplier Co.', desc:'Green coffee beans restock #4411', due:'Jul 12', amt:6800, paid:false},
+  {sup:'Dairy Fresh Distributor', desc:'Fresh milk & cream delivery', due:'Jul 15', amt:4350, paid:false},
+  {sup:'Meralco', desc:'Electric bill — July', due:'Jul 20', amt:3900, paid:false},
+  {sup:'PLDT Home', desc:'Internet — July', due:'Jul 8', amt:1699, paid:false},
+];
+let drawer = {opened:'8:02 AM', float:2000, cashSales:0, payouts:640};
+let cashFlow = [
+  {t:'Jul 8 · 8:02 AM', desc:'Opening float', in:2000, out:0},
+  {t:'Jul 7', desc:'Cash sales (day total)', in:9120, out:0},
+  {t:'Jul 7', desc:'Meralco bill payment', in:0, out:3850},
+  {t:'Jul 5', desc:'Store rent — July', in:0, out:8000},
+  {t:'Jul 5', desc:'Cash sales (day total)', in:11250, out:0},
+  {t:'Jul 3', desc:'Cups, lids & napkins', in:0, out:640},
+];
+const months = [
+  {m:'Feb', rev:64200, exp:41800}, {m:'Mar', rev:71500, exp:44100},
+  {m:'Apr', rev:69800, exp:45900}, {m:'May', rev:78300, exp:47200},
+  {m:'Jun', rev:83100, exp:49800}, {m:'Jul*', rev:86420, exp:0}, // exp filled live
+];
+let cashOnHand = 34250;
+let activeFinTab = 'overview';
+
+const FIN_TABS = [
+  ['overview','📊 Overview'], ['cash','💵 Cash Flow'], ['exp','🧾 Expenses'],
+  ['ar','📒 Receivables'], ['ap','📤 Payables'], ['ins','🧠 Insights']
+];
+function renderFinTabs(){
+  $('#finTabs').innerHTML = FIN_TABS.map(([k,l])=>`<button class="chip ${k===activeFinTab?'on':''}" onclick="finTab('${k}')">${l}</button>`).join('');
+}
+function finTab(k){
+  activeFinTab = k; renderFinTabs();
+  document.querySelectorAll('.fintab').forEach(d=>d.style.display='none');
+  $('#ft-'+k).style.display='block';
+}
+
+let plan = 'Business';   // PLT-05: plan enforcement demo
+function setPlan(p){
+  plan = p;
+  $('#planPill').textContent = p.toUpperCase()+' PLAN';
+  toast(p==='Enterprise' ? 'Upgraded to Enterprise — Accounting + HR & Payroll unlocked 🎉' : p+' plan active');
+  renderFin();renderHR();
+}
+function applyFinGate(){
+  const pro = plan==='Enterprise';
+  $('#finPro').style.display = pro ? 'block':'none';
+  $('#finBasic').style.display = pro ? 'none':'block';
+  $('#finTitle').textContent = pro ? 'Finance & Accounting' : 'Finance';
+  $('#finSub').textContent = pro
+    ? 'July 2026 · month to date · all figures live from POS & inventory · Enterprise'
+    : 'July 2026 · month to date · Business plan';
+}
+function renderFinBasic(){
+  const exp = expTotal();
+  const gross = mtdRevenue - mtdCogs, net = gross - exp;
+  $('#finKpisB').innerHTML = `
+    <div class="card kpi"><div class="lbl">Revenue · MTD</div><div class="val num">${peso0(mtdRevenue)}</div><div class="dl up">▲ 9.2% vs June pace</div></div>
+    <div class="card kpi"><div class="lbl">Expenses · MTD</div><div class="val num">${peso0(exp)}</div><div class="dl">${expenses.length} entries recorded</div></div>
+    <div class="card kpi"><div class="lbl">Net profit · MTD</div><div class="val num" style="color:${net>=0?'var(--good)':'var(--bad)'}">${peso0(net)}</div><div class="dl ${net>=0?'up':'dn'}">${(net/mtdRevenue*100).toFixed(1)}% net margin</div></div>`;
+  const byCat={}; expenses.forEach(e=>byCat[e.cat]=(byCat[e.cat]||0)+e.amt);
+  $('#pnlB').innerHTML = `
+    <tr><td><b>Revenue</b></td><td class="ta-r num"><b>${peso0(mtdRevenue)}</b></td></tr>
+    <tr><td style="color:var(--muted)">Cost of goods sold</td><td class="ta-r num" style="color:var(--muted)">(${peso0(mtdCogs)})</td></tr>
+    <tr><td><b>Gross profit</b> <span class="badge b-good num">${(gross/mtdRevenue*100).toFixed(0)}%</span></td><td class="ta-r num"><b>${peso0(gross)}</b></td></tr>
+    ${Object.entries(byCat).map(([c,v])=>`<tr><td style="color:var(--muted);padding-left:22px">${c}</td><td class="ta-r num" style="color:var(--muted)">(${peso0(v)})</td></tr>`).join('')}
+    <tr><td style="font-family:var(--font-display);font-weight:800;font-size:15px">Net profit</td><td class="ta-r num" style="font-family:var(--font-display);font-weight:800;font-size:15px;color:${net>=0?'var(--good)':'var(--bad)'}">${peso0(net)}</td></tr>`;
+  $('#payChartB').innerHTML = payMix.map(p=>barRow(p.m, Math.round(mtdRevenue*p.v/100), mtdRevenue*.6, p.m==='Cash'?'var(--brand)':p.m==='GCash'?'var(--accent)':p.m==='Maya'?'var(--good)':'var(--muted)')).join('');
+  $('#expTableB').innerHTML = '<tr><th>Date</th><th>Description</th><th>Category</th><th class="ta-r">Amount</th></tr>'+
+    expenses.map(e=>`<tr><td>${e.d}</td><td class="pname">${e.desc}</td><td><span class="badge b-brand">${e.cat}</span></td><td class="ta-r num">${peso(e.amt)}</td></tr>`).join('');
+}
+function addExpenseB(){
+  const d=$('#expDescB').value.trim(),a=+$('#expAmtB').value;
+  if(!d||!a||a<=0){toast('Enter a description and a valid amount');return;}
+  expenses.unshift({d:'Jul 8',desc:d,cat:$('#expCatB').value,amt:a});
+  cashFlow.unshift({t:'Jul 8',desc:d,in:0,out:a});
+  cashOnHand-=a; drawer.payouts+=a;
+  $('#expDescB').value='';$('#expAmtB').value='';
+  toast('Expense recorded — P&L updated');renderFin();renderDash();
+}
+function expTotal(){ return expenses.reduce((a,e)=>a+e.amt,0); }
+function barRow(label, val, max, color){
+  const pct = max? Math.round(val/max*100):0;
+  return `<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><b>${label}</b><span class="num" style="color:var(--muted)">${peso0(val)}</span></div>
+  <div style="height:9px;background:var(--bg);border-radius:99px;overflow:hidden"><div style="width:${pct}%;height:100%;background:${color};border-radius:99px"></div></div></div>`;
+}
+
+function renderFin(){
+  applyFinGate();
+  renderFinBasic();
+  renderFinTabs();
+  const exp = expTotal();
+  const gross = mtdRevenue - mtdCogs, net = gross - exp;
+  const arOpen = receivables.filter(r=>!r.paid).reduce((a,r)=>a+r.amt,0);
+  const apOpen = payables.filter(p=>!p.paid).reduce((a,p)=>a+p.amt,0);
+
+  /* ---- OVERVIEW ---- */
+  $('#finKpis').innerHTML = `
+    <div class="card kpi"><div class="lbl">Revenue · MTD</div><div class="val num">${peso0(mtdRevenue)}</div><div class="dl up">▲ 9.2% vs June pace</div></div>
+    <div class="card kpi"><div class="lbl">Net profit · MTD</div><div class="val num" style="color:${net>=0?'var(--good)':'var(--bad)'}">${peso0(net)}</div><div class="dl ${net>=0?'up':'dn'}">${(net/mtdRevenue*100).toFixed(1)}% net margin</div></div>
+    <div class="card kpi"><div class="lbl">Cash on hand</div><div class="val num">${peso0(cashOnHand)}</div><div class="dl">Drawer + GCash + bank</div></div>
+    <div class="card kpi"><div class="lbl">Owed to you / you owe</div><div class="val num" style="font-size:20px">${peso0(arOpen)} <span style="color:var(--muted)">/</span> ${peso0(apOpen)}</div><div class="dl ${arOpen>=apOpen?'up':'wr'}">${arOpen>=apOpen?'Net receivable position':'Payables exceed receivables'}</div></div>`;
+  const byCat={}; expenses.forEach(e=>byCat[e.cat]=(byCat[e.cat]||0)+e.amt);
+  $('#pnl').innerHTML = `
+    <tr><td><b>Revenue (sales)</b></td><td class="ta-r num"><b>${peso0(mtdRevenue)}</b></td></tr>
+    <tr><td style="color:var(--muted)">Cost of goods sold</td><td class="ta-r num" style="color:var(--muted)">(${peso0(mtdCogs)})</td></tr>
+    <tr><td><b>Gross profit</b> <span class="badge b-good num">${(gross/mtdRevenue*100).toFixed(0)}%</span></td><td class="ta-r num"><b>${peso0(gross)}</b></td></tr>
+    ${Object.entries(byCat).map(([c,v])=>`<tr><td style="color:var(--muted);padding-left:22px">${c}</td><td class="ta-r num" style="color:var(--muted)">(${peso0(v)})</td></tr>`).join('')}
+    <tr><td style="color:var(--muted)"><b>Total operating expenses</b></td><td class="ta-r num" style="color:var(--muted)"><b>(${peso0(exp)})</b></td></tr>
+    <tr><td style="font-family:var(--font-display);font-weight:800;font-size:15px">Net profit</td><td class="ta-r num" style="font-family:var(--font-display);font-weight:800;font-size:15px;color:${net>=0?'var(--good)':'var(--bad)'}">${peso0(net)}</td></tr>`;
+  const catMax = Math.max(...Object.values(byCat), 1);
+  $('#expChart').innerHTML = Object.entries(byCat).sort((a,b)=>b[1]-a[1]).map(([c,v])=>barRow(c,v,catMax,'var(--bad)')).join('');
+  $('#payChart').innerHTML = payMix.map(p=>barRow(p.m, Math.round(mtdRevenue*p.v/100), mtdRevenue*.6, p.m==='Cash'?'var(--brand)':p.m==='GCash'?'var(--accent)':p.m==='Maya'?'var(--good)':'var(--muted)')).join('');
+  renderMonthChart();
+
+  /* ---- CASH FLOW ---- */
+  const cashIn = cashFlow.reduce((a,c)=>a+c.in,0), cashOut = cashFlow.reduce((a,c)=>a+c.out,0);
+  const expected = drawer.float + drawer.cashSales - drawer.payouts;
+  $('#cashKpis').innerHTML = `
+    <div class="card kpi"><div class="lbl">Cash in · this week</div><div class="val num" style="color:var(--good)">＋${peso0(cashIn)}</div><div class="dl">Sales & float</div></div>
+    <div class="card kpi"><div class="lbl">Cash out · this week</div><div class="val num" style="color:var(--bad)">−${peso0(cashOut)}</div><div class="dl">Bills, rent, supplies</div></div>
+    <div class="card kpi"><div class="lbl">Net cash flow</div><div class="val num" style="color:${cashIn-cashOut>=0?'var(--good)':'var(--bad)'}">${peso0(cashIn-cashOut)}</div><div class="dl ${cashIn-cashOut>=0?'up':'dn'}">${cashIn-cashOut>=0?'Positive — pera pumapasok':'Negative — bantayan ang labasan'}</div></div>`;
+  $('#drawerTable').innerHTML = `
+    <tr><td>Session opened</td><td class="ta-r">${drawer.opened}</td></tr>
+    <tr><td>Opening float</td><td class="ta-r num">${peso(drawer.float)}</td></tr>
+    <tr><td>＋ Cash sales this shift</td><td class="ta-r num" style="color:var(--good)">${peso(drawer.cashSales)}</td></tr>
+    <tr><td>− Payouts / expenses from drawer</td><td class="ta-r num" style="color:var(--bad)">${peso(drawer.payouts)}</td></tr>
+    <tr><td><b>Expected cash in drawer</b></td><td class="ta-r num"><b>${peso(expected)}</b></td></tr>`;
+  $('#cashLedger').innerHTML = '<tr><th>When</th><th>Description</th><th class="ta-r">In</th><th class="ta-r">Out</th></tr>'+
+    cashFlow.map(c=>`<tr><td>${c.t}</td><td>${c.desc}</td><td class="ta-r num" style="color:var(--good)">${c.in?'+'+peso0(c.in):''}</td><td class="ta-r num" style="color:var(--bad)">${c.out?'−'+peso0(c.out):''}</td></tr>`).join('');
+
+  /* ---- EXPENSES ---- */
+  $('#expCatChart').innerHTML = Object.entries(byCat).sort((a,b)=>b[1]-a[1]).map(([c,v])=>barRow(c,v,catMax,'var(--accent)')).join('');
+  $('#expTable').innerHTML = '<tr><th>Date</th><th>Description</th><th>Category</th><th class="ta-r">Amount</th></tr>'+
+    expenses.map(e=>`<tr><td>${e.d}</td><td class="pname">${e.desc}</td><td><span class="badge b-brand">${e.cat}</span></td><td class="ta-r num">${peso(e.amt)}</td></tr>`).join('');
+
+  /* ---- RECEIVABLES ---- */
+  const isOver = r => !r.paid && (r.due==='Jul 2' || r.due==='Jun 26');
+  const overAmt = receivables.filter(isOver).reduce((a,r)=>a+r.amt,0);
+  $('#arKpis').innerHTML = `
+    <div class="card kpi"><div class="lbl">Total utang (open)</div><div class="val num">${peso0(arOpen)}</div><div class="dl">${receivables.filter(r=>!r.paid).length} customers</div></div>
+    <div class="card kpi"><div class="lbl">Overdue</div><div class="val num" style="color:${overAmt?'var(--bad)':'var(--good)'}">${peso0(overAmt)}</div><div class="dl ${overAmt?'dn':'up'}">${overAmt?'Singilin na po':'Nothing overdue 🎉'}</div></div>
+    <div class="card kpi"><div class="lbl">Collected this month</div><div class="val num">${peso0(receivables.filter(r=>r.paid).reduce((a,r)=>a+r.amt,0))}</div><div class="dl up">Marked as paid</div></div>`;
+  $('#arTable').innerHTML = '<tr><th>Customer</th><th>Taken</th><th>Due</th><th>Status</th><th class="ta-r">Amount</th><th class="ta-r"></th></tr>'+
+    receivables.map((r,i)=>`<tr style="${r.paid?'opacity:.5':''}"><td class="pname">${r.name}</td><td>${r.date}</td><td>${r.due}</td>
+    <td>${r.paid?'<span class="badge b-good">Paid</span>':isOver(r)?'<span class="badge b-bad">Overdue</span>':'<span class="badge b-warn">Open</span>'}</td>
+    <td class="ta-r num">${peso(r.amt)}</td>
+    <td class="ta-r">${r.paid?'':`<button class="btn btn-sm btn-o" onclick="payAR(${i})">Mark paid</button>`}</td></tr>`).join('');
+
+  /* ---- PAYABLES ---- */
+  const dueSoon = payables.filter(p=>!p.paid && (p.due==='Jul 8'||p.due==='Jul 12')).reduce((a,p)=>a+p.amt,0);
+  $('#apKpis').innerHTML = `
+    <div class="card kpi"><div class="lbl">Total bills open</div><div class="val num">${peso0(apOpen)}</div><div class="dl">${payables.filter(p=>!p.paid).length} bills</div></div>
+    <div class="card kpi"><div class="lbl">Due within 7 days</div><div class="val num" style="color:${dueSoon?'var(--warn)':'var(--good)'}">${peso0(dueSoon)}</div><div class="dl wr">Ihanda ang pambayad</div></div>
+    <div class="card kpi"><div class="lbl">Cash after paying all bills</div><div class="val num" style="color:${cashOnHand-apOpen>=0?'var(--good)':'var(--bad)'}">${peso0(cashOnHand-apOpen)}</div><div class="dl">Cash on hand − payables</div></div>`;
+  $('#apTable').innerHTML = '<tr><th>Supplier / Biller</th><th>Details</th><th>Due</th><th>Status</th><th class="ta-r">Amount</th><th class="ta-r"></th></tr>'+
+    payables.map((p,i)=>`<tr style="${p.paid?'opacity:.5':''}"><td class="pname">${p.sup}</td><td>${p.desc}</td><td>${p.due}</td>
+    <td>${p.paid?'<span class="badge b-good">Paid</span>':(p.due==='Jul 8')?'<span class="badge b-bad">Due today</span>':'<span class="badge b-warn">Open</span>'}</td>
+    <td class="ta-r num">${peso(p.amt)}</td>
+    <td class="ta-r">${p.paid?'':`<button class="btn btn-sm btn-o" onclick="payAP(${i})">Pay</button>`}</td></tr>`).join('');
+
+  /* ---- INSIGHTS ---- */
+  const gmPct = gross/mtdRevenue;                       // gross margin ratio
+  const dailyFixed = exp/8;                             // 8 days into July
+  const breakEvenDaily = dailyFixed/gmPct;              // sales needed per day to cover expenses
+  const dailyBurn = (mtdCogs+exp)/8;
+  const runwayDays = Math.floor(cashOnHand/Math.max(dailyBurn - mtdRevenue/8, 1));
+  const runwayOk = mtdRevenue/8 >= dailyBurn;
+  $('#insKpis').innerHTML = `
+    <div class="card kpi"><div class="lbl">Break-even sales / day</div><div class="val num">${peso0(breakEvenDaily)}</div><div class="dl ${salesToday>=breakEvenDaily?'up':'wr'}">Today: ${peso0(salesToday)} — ${salesToday>=breakEvenDaily?'above break-even ✓':'below break-even'}</div></div>
+    <div class="card kpi"><div class="lbl">Gross margin</div><div class="val num">${(gmPct*100).toFixed(1)}%</div><div class="dl">Every ₱100 sale keeps ${peso0(gmPct*100)} before expenses</div></div>
+    <div class="card kpi"><div class="lbl">Cash position</div><div class="val num">${runwayOk?'Healthy':runwayDays+' days'}</div><div class="dl ${runwayOk?'up':'dn'}">${runwayOk?'Sales cover daily costs':'Runway if sales stopped'}</div></div>`;
+  const prof=[...products].map(p=>({...p,margin:p.price-p.cost,mpct:p.price?(p.price-p.cost)/p.price*100:0,earned:(p.price-p.cost)*p.sold}))
+    .sort((a,b)=>b.earned-a.earned).slice(0,8);
+  $('#profitTable').innerHTML = '<tr><th>Product</th><th class="ta-r">Margin/unit</th><th class="ta-r">Margin %</th><th class="ta-r">Profit earned</th></tr>'+
+    prof.map(p=>`<tr><td class="pname">${p.emoji} ${p.name}</td><td class="ta-r num">${peso(p.margin)}</td>
+    <td class="ta-r num" style="color:${p.mpct>=30?'var(--good)':p.mpct>=15?'var(--warn)':'var(--bad)'}">${p.mpct.toFixed(0)}%</td>
+    <td class="ta-r num"><b>${peso0(p.earned)}</b></td></tr>`).join('');
+  const best=prof[0], thin=prof.filter(p=>p.mpct<20).sort((a,b)=>a.mpct-b.mpct)[0];
+  const adv=[];
+  adv.push(`💡 <b>${best.name}</b> is your profit engine — ${peso0(best.earned)} earned. Never let it run out (set reorder point higher).`);
+  if(thin) adv.push(`⚠️ <b>${thin.name}</b> margin is only ${thin.mpct.toFixed(0)}%. Consider a small price adjustment or a better supplier price.`);
+  if(apOpen>arOpen) adv.push(`📤 You owe ${peso0(apOpen-arOpen)} more than customers owe you — collect the listahan before paying non-urgent bills.`);
+  else adv.push(`📒 Customers owe you ${peso0(arOpen)}. Collections due this week can fund your supplier payments.`);
+  adv.push(`📅 Peak sales at 5–7 PM — restock shelves by 4 PM and schedule your fastest cashier.`);
+  $('#advice').innerHTML = adv.map(a=>`<div style="padding:9px 0;border-bottom:1px dashed var(--line);font-size:13px;line-height:1.6">${a}</div>`).join('');
+  const annualSales = mtdRevenue/8*30.4*12;
+  const taxable = Math.max(annualSales-250000,0);
+  const tax8 = taxable*0.08;
+  $('#taxTable').innerHTML = `
+    <tr><td>Annualized gross sales (pace)</td><td class="ta-r num">${peso0(annualSales)}</td></tr>
+    <tr><td>Less ₱250,000 exemption</td><td class="ta-r num">(${peso0(Math.min(annualSales,250000))})</td></tr>
+    <tr><td><b>Est. annual tax @ 8% option</b></td><td class="ta-r num"><b>${peso0(tax8)}</b></td></tr>
+    <tr><td>Suggested monthly set-aside</td><td class="ta-r num" style="color:var(--warn)"><b>${peso0(tax8/12)}</b></td></tr>`;
+}
+function addExpense(){
+  const d=$('#expDesc').value.trim(),a=+$('#expAmt').value;
+  if(!d||!a||a<=0){toast('Enter a description and a valid amount');return;}
+  expenses.unshift({d:'Jul 8',desc:d,cat:$('#expCat').value,amt:a});
+  cashFlow.unshift({t:'Jul 8',desc:d,in:0,out:a});
+  cashOnHand-=a; drawer.payouts+=a;
+  $('#expDesc').value='';$('#expAmt').value='';
+  toast('Expense recorded — P&L, cash flow & drawer updated');renderFin();renderDash();
+}
+function payAR(i){receivables[i].paid=true;cashOnHand+=receivables[i].amt;
+  cashFlow.unshift({t:'Jul 8',desc:'Collection — '+receivables[i].name,in:receivables[i].amt,out:0});
+  toast('Collected '+peso0(receivables[i].amt)+' from '+receivables[i].name);renderFin();}
+function payAP(i){payables[i].paid=true;cashOnHand-=payables[i].amt;
+  cashFlow.unshift({t:'Jul 8',desc:'Paid — '+payables[i].sup,in:0,out:payables[i].amt});
+  toast('Paid '+payables[i].sup+' · '+peso0(payables[i].amt));renderFin();}
+function addAR(){
+  const n=$('#arName').value.trim(),a=+$('#arAmt').value;
+  if(!n||!a||a<=0){toast('Enter customer name and amount');return;}
+  receivables.unshift({name:n,date:'Jul 8',due:$('#arDue').value||'Jul 22',amt:a,paid:false});
+  $('#arName').value='';$('#arAmt').value='';$('#arDue').value='';
+  toast('Utang recorded for '+n);renderFin();
+}
+function closeDrawer(){
+  const expected=drawer.float+drawer.cashSales-drawer.payouts;
+  toast('Drawer closed — expected '+peso(expected)+'. Count cash & confirm (demo)');
+}
+function renderMonthChart(){
+  const W=920,H=200,P=40,n=months.length;
+  const max=Math.max(...months.map(m=>m.rev))*1.15;
+  const gap=(W-2*P)/n, bw=gap*0.62;
+  const y=v=>H-26-(v/max)*(H-52);
+  let s='';
+  months.forEach((m,i)=>{
+    const exVal = m.m==='Jul*' ? expTotal()+mtdCogs*0 : m.exp;
+    const x0=P+i*gap+(gap-bw)/2;
+    s+=`<rect x="${x0}" y="${y(m.rev)}" width="${bw*0.46}" height="${H-26-y(m.rev)}" rx="4" fill="var(--brand)"/>`;
+    s+=`<rect x="${x0+bw*0.54}" y="${y(exVal)}" width="${bw*0.46}" height="${H-26-y(exVal)}" rx="4" fill="var(--bad)" opacity="0.75"/>`;
+    s+=`<circle cx="${x0+bw/2}" cy="${y(Math.max(m.rev-exVal,0))}" r="4" fill="var(--accent)"/>`;
+    s+=`<text x="${x0+bw/2}" y="${H-8}" font-size="11" fill="var(--muted)" text-anchor="middle" font-family="Inter">${m.m}</text>`;
+  });
+  $('#monthChart').innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">${s}</svg>`;
+}
+
+
+/* ================= HR & PAYROLL (Enterprise) ================= */
+let employees = [
+  {id:1, name:'Jessa Ramos',    role:'Barista',        rate:610, days:11, status:'Regular'},
+  {id:2, name:'Marco Villanueva',role:'Store Manager', rate:950, days:12, status:'Regular'},
+  {id:3, name:'Liza Bautista',  role:'Barista',        rate:610, days:10, status:'Probationary'},
+  {id:4, name:'Ramil Santos',   role:'Stockroom / Delivery',rate:560, days:12, status:'Regular'},
+];
+let attendance = [
+  {name:'Jessa Ramos',    tin:'7:58 AM', tout:'—', st:'Present'},
+  {name:'Marco Villanueva',tin:'7:45 AM', tout:'—', st:'Present'},
+  {name:'Liza Bautista',  tin:'8:22 AM', tout:'—', st:'Late'},
+  {name:'Ramil Santos',   tin:'—',       tout:'—', st:'Rest day'},
+];
+let payrollReleased = false;
+let activeHrTab = 'emp';
+const HR_TABS = [['emp','👥 Employees'],['att','🕒 Attendance'],['pay','💰 Payroll Run']];
+
+function renderHrTabs(){
+  $('#hrTabs').innerHTML = HR_TABS.map(([k,l])=>`<button class="chip ${k===activeHrTab?'on':''}" onclick="hrTab('${k}')">${l}</button>`).join('');
+}
+function hrTab(k){
+  activeHrTab=k; renderHrTabs();
+  document.querySelectorAll('.hrtab').forEach(d=>d.style.display='none');
+  $('#ht-'+k).style.display='block';
+}
+function deductions(gross){
+  const sss = gross*0.045, phic = gross*0.025, hdmf = 200;
+  const taxBase = Math.max(gross-10417,0);           // ~250k/yr exemption, semi-monthly
+  const tax = taxBase*0.15;
+  return {sss, phic, hdmf, tax, total: sss+phic+hdmf+tax};
+}
+function applyHrGate(){
+  const pro = plan==='Enterprise';
+  $('#hrPro').style.display = pro?'block':'none';
+  $('#hrLocked').style.display = pro?'none':'block';
+  $('#hrExportBtn').style.display = pro?'inline-flex':'none';
+  $('#hrSub').textContent = pro ? 'Cutoff: July 1–15, 2026 · payday July 15 · Enterprise' : 'Enterprise feature';
+}
+function renderHR(){
+  applyHrGate();
+  if(plan!=='Enterprise') return;
+  renderHrTabs();
+  const gross = employees.reduce((a,e)=>a+e.rate*e.days,0);
+  const dedAll = employees.reduce((a,e)=>a+deductions(e.rate*e.days).total,0);
+  const net = gross-dedAll;
+  const thirteenth = employees.reduce((a,e)=>a+(e.rate*e.days)/12,0)*1; // accrual this cutoff
+  /* employees */
+  $('#hrKpis').innerHTML = `
+    <div class="card kpi"><div class="lbl">Headcount</div><div class="val num">${employees.length}</div><div class="dl">${employees.filter(e=>e.status==='Regular').length} regular · ${employees.filter(e=>e.status!=='Regular').length} probationary</div></div>
+    <div class="card kpi"><div class="lbl">Payroll cost · this cutoff</div><div class="val num">${peso0(gross)}</div><div class="dl">Gross, before deductions</div></div>
+    <div class="card kpi"><div class="lbl">13th month accrued</div><div class="val num">${peso0(thirteenth)}</div><div class="dl">Auto-set aside this cutoff</div></div>`;
+  $('#empTable').innerHTML = '<tr><th>Employee</th><th>Role</th><th>Status</th><th class="ta-r">Daily rate</th><th class="ta-r">Days (cutoff)</th></tr>'+
+    employees.map(e=>`<tr><td class="pname">${e.name}</td><td>${e.role}</td>
+    <td><span class="badge ${e.status==='Regular'?'b-good':'b-warn'}">${e.status}</span></td>
+    <td class="ta-r num">${peso(e.rate)}</td>
+    <td class="ta-r"><span class="qty" style="justify-content:flex-end"><button class="iconb" onclick="chDays(${e.id},-1)">−</button><b class="num">${e.days}</b><button class="iconb" onclick="chDays(${e.id},1)">＋</button></span></td></tr>`).join('');
+  /* attendance */
+  const present = attendance.filter(a=>a.st==='Present'||a.st==='Late').length;
+  $('#attKpis').innerHTML = `
+    <div class="card kpi"><div class="lbl">Present today</div><div class="val num">${present}/${attendance.length}</div><div class="dl up">On the floor</div></div>
+    <div class="card kpi"><div class="lbl">Late today</div><div class="val num">${attendance.filter(a=>a.st==='Late').length}</div><div class="dl wr">Auto-deducted per policy</div></div>
+    <div class="card kpi"><div class="lbl">Next payday</div><div class="val">Jul 15</div><div class="dl">Semi-monthly schedule</div></div>`;
+  $('#attTable').innerHTML = '<tr><th>Employee</th><th>Time in</th><th>Time out</th><th>Status</th></tr>'+
+    attendance.map(a=>`<tr><td class="pname">${a.name}</td><td class="num">${a.tin}</td><td class="num">${a.tout}</td>
+    <td><span class="badge ${a.st==='Present'?'b-good':a.st==='Late'?'b-warn':'b-brand'}">${a.st}</span></td></tr>`).join('');
+  /* payroll */
+  $('#payKpis').innerHTML = `
+    <div class="card kpi"><div class="lbl">Total gross</div><div class="val num">${peso0(gross)}</div><div class="dl">${employees.length} employees</div></div>
+    <div class="card kpi"><div class="lbl">Total deductions</div><div class="val num" style="color:var(--bad)">−${peso0(dedAll)}</div><div class="dl">SSS · PhilHealth · Pag-IBIG · tax</div></div>
+    <div class="card kpi"><div class="lbl">Total net pay</div><div class="val num" style="color:var(--good)">${peso0(net)}</div><div class="dl ${payrollReleased?'up':'wr'}">${payrollReleased?'Released ✓':'For approval'}</div></div>`;
+  $('#payrollTable').innerHTML = '<tr><th>Employee</th><th class="ta-r">Gross</th><th class="ta-r">SSS</th><th class="ta-r">PhilHealth</th><th class="ta-r">Pag-IBIG</th><th class="ta-r">Tax</th><th class="ta-r">Net pay</th><th class="ta-r"></th></tr>'+
+    employees.map(e=>{const g=e.rate*e.days,d=deductions(g);
+    return `<tr><td class="pname">${e.name}<br><span class="psku">${e.role} · ${e.days} days</span></td>
+      <td class="ta-r num">${peso0(g)}</td><td class="ta-r num" style="color:var(--muted)">${peso0(d.sss)}</td>
+      <td class="ta-r num" style="color:var(--muted)">${peso0(d.phic)}</td><td class="ta-r num" style="color:var(--muted)">${peso0(d.hdmf)}</td>
+      <td class="ta-r num" style="color:var(--muted)">${peso0(d.tax)}</td>
+      <td class="ta-r num"><b>${peso0(g-d.total)}</b></td>
+      <td class="ta-r"><button class="btn btn-sm btn-o" onclick="showPayslip(${e.id})">Payslip</button></td></tr>`;}).join('');
+}
+function chDays(id,d){const e=employees.find(x=>x.id===id);e.days=Math.min(Math.max(e.days+d,0),13);renderHR();}
+function addEmp(){
+  const n=$('#emName').value.trim(),r=$('#emRole').value.trim(),rt=+$('#emRate').value;
+  if(!n||!rt){toast('Name and daily rate are required');return;}
+  employees.push({id:Date.now(),name:n,role:r||'Staff',rate:rt,days:0,status:'Probationary'});
+  attendance.push({name:n,tin:'—',tout:'—',st:'Rest day'});
+  ['emName','emRole','emRate'].forEach(i=>$('#'+i).value='');
+  toast(n+' added to payroll');renderHR();
+}
+function runPayroll(){
+  if(payrollReleased){toast('Payroll for this cutoff is already released');return;}
+  payrollReleased=true;
+  const net=employees.reduce((a,e)=>{const g=e.rate*e.days;return a+g-deductions(g).total;},0);
+  const gross=employees.reduce((a,e)=>a+e.rate*e.days,0);
+  expenses.unshift({d:'Jul 8',desc:'Payroll — Jul 1-15 cutoff',cat:'Salaries',amt:Math.round(gross)});
+  cashFlow.unshift({t:'Jul 8',desc:'Payroll release (net)',in:0,out:Math.round(net)});
+  cashOnHand-=Math.round(net);
+  toast('Payroll released — '+peso0(net)+' net · booked to Salaries expense');
+  renderHR();renderFin();renderDash();
+}
+function showPayslip(id){
+  const e=employees.find(x=>x.id===id);
+  const g=e.rate*e.days,d=deductions(g);
+  $('#psBody').innerHTML=`
+    <div class="rc-head"><div class="rc-logo">${$('#bizInit').value.toUpperCase()}</div><div class="rc-bn">${$('#bizName').value}</div>
+    <div style="font-size:10.5px;color:#777">PAYSLIP · Cutoff Jul 1–15, 2026 · Payday Jul 15</div></div><hr>
+    <div class="rl"><span><b>${e.name}</b></span><span>${e.role}</span></div>
+    <div class="rl"><span>Status</span><span>${e.status}</span></div><hr>
+    <div class="rl"><span>Basic pay (${e.days} days × ${peso0(e.rate)})</span><span class="num">${peso(g)}</span></div>
+    <div class="rl tot"><span>GROSS PAY</span><span class="num">${peso(g)}</span></div><hr>
+    <div class="rl"><span>SSS (EE share)</span><span class="num">−${peso(d.sss)}</span></div>
+    <div class="rl"><span>PhilHealth (EE share)</span><span class="num">−${peso(d.phic)}</span></div>
+    <div class="rl"><span>Pag-IBIG</span><span class="num">−${peso(d.hdmf)}</span></div>
+    <div class="rl"><span>Withholding tax (est.)</span><span class="num">−${peso(d.tax)}</span></div>
+    <div class="rl"><span>Total deductions</span><span class="num">−${peso(d.total)}</span></div><hr>
+    <div class="rl tot"><span>NET PAY</span><span class="num">${peso(g-d.total)}</span></div>
+    <div class="rc-foot">13th-month accrued this cutoff: ${peso0(g/12)} · Powered by Go NegosyoOS</div>`;
+  $('#psOverlay').classList.add('show');
+}
+
+/* ================= BRANDING ENGINE (the white-label heart) ================= */
+const PRESETS=[
+  {n:'Barako Teal', d:'The Go NegosyoOS default', b:'#0E5F58', a:'#E8A33D', name:'Barako Coffee Co.', init:'BC'},
+  {n:'Pharma Fresh', d:'Clean & clinical retail', b:'#0B7A4B', a:'#5FC08B', name:'Farmacia Buhay', init:'FB'},
+  {n:'Athletic Bold', d:'Sportswear & apparel', b:'#B3202C', a:'#F5B301', name:'MNG Sportswear', init:'MG'},
+  {n:'Express Blue', d:'Logistics & delivery', b:'#0F4C81', a:'#F28C28', name:'Lighthouse Express', init:'LE'},
+  {n:'Golden Lechon', d:'Food & catering', b:'#8A4B12', a:'#E9B44C', name:'Los Polluelos', init:'LP'},
+  {n:'Midnight Tech', d:'Gadgets & services', b:'#2F2A85', a:'#8AA3FF', name:'Keana Computers', init:'KX'},
+];
+function hexToRgb(h){h=h.replace('#','');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+function luminance(h){const [r,g,b]=hexToRgb(h).map(v=>{v/=255;return v<=.03928?v/12.92:((v+.055)/1.055)**2.4});return .2126*r+.7152*g+.0722*b;}
+function mix(h,pct,to=[0,0,0]){const c=hexToRgb(h);return '#'+c.map((v,i)=>Math.round(v*(1-pct)+to[i]*pct).toString(16).padStart(2,'0')).join('');}
+function applyBrand(){
+  const b=$('#brandColor').value,a=$('#accentColor').value;
+  const r=document.documentElement.style;
+  r.setProperty('--brand',b);
+  r.setProperty('--brand-ink',mix(b,.42));
+  r.setProperty('--brand-soft',mix(b,.9,[255,255,255]));
+  r.setProperty('--brand-contrast',luminance(b)>.45?'#17211F':'#FFFFFF');
+  r.setProperty('--accent',a);
+  const nm=$('#bizName').value||'Your Business', init=($('#bizInit').value||'YB').toUpperCase();
+  $$('[data-bizname]').forEach(e=>e.textContent=nm);
+  $$('[data-logo]').forEach(e=>e.textContent=init);
+  document.title=nm+' — Powered by Go NegosyoOS';
+}
+function renderPresets(){
+  $('#presets').innerHTML=PRESETS.map((p,i)=>`
+    <button class="preset" onclick="usePreset(${i})">
+      <div class="sw"><i style="background:${p.b}"></i><i style="background:${p.a}"></i><i style="background:${mix(p.b,.42)}"></i></div>
+      <b>${p.n}</b><span>${p.d}</span></button>`).join('');
+}
+function usePreset(i){
+  const p=PRESETS[i];
+  $('#brandColor').value=p.b;$('#accentColor').value=p.a;
+  $('#bizName').value=p.name;$('#bizInit').value=p.init;
+  applyBrand();toast('Theme applied: '+p.n+' — same system, your brand ✨');
+}
+['brandColor','accentColor','bizName','bizInit'].forEach(id=>$('#'+id).addEventListener('input',applyBrand));
+
+/* overlay dismiss on backdrop */
+$$('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show');}));
+
+/* ================= INIT ================= */
+renderDash();renderCats();renderProds();renderCart();renderInv();renderFin();renderHR();renderPresets();
+
+</script>
+</body>
+</html>
