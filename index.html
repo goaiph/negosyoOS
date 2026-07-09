@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Go NegosyoOS — All-in-One Business Operating System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --brand:#0E5F58; --brand-ink:#0A423D; --brand-soft:#E3EFED; --brand-contrast:#FFFFFF;
@@ -13,11 +14,12 @@
   --bg:#F3F5F4; --surface:#FFFFFF; --ink:#17211F; --muted:#5E6B68; --line:#E1E7E5;
   --good:#188A5C; --warn:#B47A0E; --bad:#C24333;
   --radius:14px; --shadow:0 1px 2px rgba(23,33,31,.05),0 6px 20px rgba(23,33,31,.06);
-  --font-display:"Bricolage Grotesque",sans-serif; --font-body:"Inter",sans-serif;
+  --font-display:"Plus Jakarta Sans",sans-serif; --font-body:"Inter",sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased}
+html{overflow-x:hidden}
+body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased;overflow-x:hidden;width:100%}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input,select,textarea{font-family:inherit;font-size:14px}
 .num{font-variant-numeric:tabular-nums}
@@ -28,7 +30,8 @@ input,select,textarea{font-family:inherit;font-size:14px}
 .app{display:grid;grid-template-columns:236px 1fr;min-height:100vh}
 .side{background:linear-gradient(178deg,var(--brand-ink),color-mix(in srgb,var(--brand-ink) 82%, #000 18%));color:#fff;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
 .side-brand{display:flex;align-items:center;gap:10px;padding:20px 18px 16px}
-.logo-chip{width:38px;height:38px;border-radius:11px;background:var(--accent);color:var(--brand-ink);display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:15px;flex:none}
+.logo-chip{width:38px;height:38px;border-radius:11px;background:var(--accent);color:var(--brand-ink);display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:15px;flex:none;overflow:hidden}
+.logo-chip img{width:100%;height:100%;object-fit:cover;display:block}
 .side-brand .bn{font-family:var(--font-display);font-weight:700;font-size:15px;line-height:1.15;letter-spacing:.01em}
 .side-brand .bt{font-size:10.5px;opacity:.62;margin-top:2px}
 .side nav{padding:6px 10px;flex:1}
@@ -67,8 +70,9 @@ input,select,textarea{font-family:inherit;font-size:14px}
 .b-brand{background:var(--brand-soft);color:var(--brand-ink)}
 
 /* ---------- tables ---------- */
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;padding:8px 10px;border-bottom:1px solid var(--line)}
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -2px;scrollbar-width:thin}
+table{width:100%;min-width:560px;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
 td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle}
 tr:last-child td{border-bottom:none}
 td .pname{font-weight:600}
@@ -115,6 +119,11 @@ td .psku{font-size:11px;color:var(--muted)}
 .qty b{min-width:20px;text-align:center;font-size:13px}
 .tot-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;color:var(--muted)}
 .tot-row.big{font-size:17px;color:var(--ink);font-weight:700;font-family:var(--font-display);padding-top:8px;border-top:2px solid var(--ink);margin-top:6px}
+.vat-switch{width:30px;height:17px;border-radius:99px;background:var(--line);position:relative;display:inline-block;vertical-align:middle;margin-left:4px;transition:background .15s;border:none;padding:0;cursor:pointer}
+.vat-switch i{position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+.vat-switch.on{background:var(--brand)}
+.vat-switch.on i{transform:translateX(13px)}
+#vatRow.off #ctVat{opacity:.4}
 .empty{color:var(--muted);text-align:center;padding:26px 10px;font-size:13px}
 
 /* ---------- modal ---------- */
@@ -134,7 +143,8 @@ td .psku{font-size:11px;color:var(--muted)}
 /* ---------- receipt ---------- */
 .receipt{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;background:#fff;border:1px dashed #bbb;border-radius:8px;padding:18px 16px;color:#222}
 .receipt .rc-head{text-align:center;margin-bottom:10px}
-.receipt .rc-logo{width:34px;height:34px;border-radius:9px;background:var(--brand);color:var(--brand-contrast);display:inline-grid;place-items:center;font-weight:800;font-family:var(--font-display);margin-bottom:6px}
+.receipt .rc-logo{width:34px;height:34px;border-radius:9px;background:var(--brand);color:var(--brand-contrast);display:inline-grid;place-items:center;font-weight:800;font-family:var(--font-display);margin-bottom:6px;overflow:hidden}
+.receipt .rc-logo img{width:100%;height:100%;object-fit:cover;display:block}
 .receipt .rc-bn{font-weight:800;font-size:13px;font-family:var(--font-body)}
 .receipt hr{border:none;border-top:1px dashed #ccc;margin:8px 0}
 .receipt .rl{display:flex;justify-content:space-between;gap:8px;padding:1.5px 0}
@@ -183,17 +193,45 @@ td .psku{font-size:11px;color:var(--muted)}
 /* ---------- responsive ---------- */
 @media(max-width:960px){
   .app{grid-template-columns:1fr}
-  .side{position:fixed;bottom:0;top:auto;height:auto;width:100%;flex-direction:row;align-items:center;z-index:40;padding:0}
+  .main{min-width:0}
+  .side{position:fixed;bottom:0;top:auto;height:auto;width:100%;flex-direction:row;align-items:center;z-index:40;padding:0;padding-bottom:env(safe-area-inset-bottom)}
   .side-brand,.nav-lbl,.side-foot{display:none}
   .side nav{display:flex;flex:1;padding:6px;justify-content:space-around}
-  .nav-btn{flex-direction:column;gap:3px;font-size:10px;padding:7px 6px;margin:0}
+  .nav-btn{flex-direction:column;gap:3px;font-size:10px;padding:9px 6px;margin:0;min-height:48px;justify-content:center}
   .nav-btn.on{box-shadow:inset 0 -3px 0 var(--accent)}
-  .main{padding:16px 14px 96px}
+  .nav-btn svg{width:19px;height:19px}
+  .main{padding:14px 12px calc(90px + env(safe-area-inset-bottom))}
   .g4,.g3{grid-template-columns:repeat(2,1fr)}
   .pos-wrap,.brand-wrap{grid-template-columns:1fr}
   .cart{position:static}
+  .topbar{gap:10px}
+  .topbar h1{font-size:20px}
+  /* iOS: inputs under 16px trigger auto-zoom on focus — bump to 16px on touch-sized viewports */
+  input,select,textarea{font-size:16px}
+  .search input{font-size:16px}
+  .btn-sm{font-size:12px}
+  /* tab strips scroll horizontally instead of wrapping into multiple rows */
+  .cat-row{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px;margin:0 -2px 14px;padding-left:2px;padding-right:2px}
+  .cat-row .chip{flex:none;scroll-snap-align:start}
+  .cat-row{scroll-snap-type:x proximity}
+  /* larger touch targets */
+  .iconb{width:34px;height:34px}
+  .btn{padding:10px 16px}
+  /* modals: full-width sheets with safe max-height on small screens */
+  .modal{max-width:100%;width:100%;border-radius:18px 18px 0 0;max-height:88vh}
+  .overlay{align-items:flex-end;padding:0}
+  .overlay.show{display:flex}
+  table{min-width:480px}
+  .prod-grid{grid-template-columns:repeat(2,1fr)}
+  .table-scroll{position:relative}
+  .table-scroll::after{content:'';position:absolute;top:0;right:0;bottom:0;width:22px;background:linear-gradient(to right,rgba(246,247,245,0),rgba(23,33,31,.08));pointer-events:none}
 }
-@media(max-width:520px){.g4,.g3,.g2{grid-template-columns:1fr}}
+@media(max-width:520px){
+  .g4,.g3,.g2{grid-template-columns:1fr}
+  .prod-grid{grid-template-columns:repeat(2,1fr)}
+  .brand-row{gap:8px}
+  .plan-card .price{font-size:26px}
+}
 </style>
 </head>
 <body>
@@ -237,8 +275,8 @@ td .psku{font-size:11px;color:var(--muted)}
         </div>
       </div>
       <div class="grid g2 mt">
-        <div class="card"><h3>Top movers today</h3><table id="topMovers"></table></div>
-        <div class="card"><h3>Recent transactions</h3><table id="recentTx"></table></div>
+        <div class="card"><h3>Top movers today</h3><div class="table-scroll"><table id="topMovers"></table></div></div>
+        <div class="card"><h3>Recent transactions</h3><div class="table-scroll"><table id="recentTx"></table></div></div>
       </div>
     </section>
 
@@ -248,9 +286,12 @@ td .psku{font-size:11px;color:var(--muted)}
         <div><h1>Point of Sale</h1><div class="sub">Barista: Jessa · Station 1 · Shift opened 8:02 AM</div></div>
         <span class="badge b-brand num" id="posToday"></span>
       </div>
+      <div class="cat-row" id="posTabs"></div>
+
+      <div id="pt-sale">
       <div class="pos-wrap">
         <div>
-          <div class="search"><input id="posSearch" placeholder="Search product name or SKU…  (try 'kape')" aria-label="Search products"></div>
+          <div class="search"><input id="posSearch" placeholder="Search or scan barcode…  (try 'kape' or 4801234500019)" aria-label="Search products"></div>
           <div class="cat-row" id="catRow"></div>
           <div class="prod-grid" id="prodGrid"></div>
         </div>
@@ -260,10 +301,24 @@ td .psku{font-size:11px;color:var(--muted)}
           <div class="mt">
             <div class="tot-row"><span>Subtotal</span><b class="num" id="ctSub">₱0.00</b></div>
             <div class="tot-row"><span>Discount <button class="btn-sm btn btn-o" style="padding:2px 8px" onclick="cycleDisc()" id="discBtn">0%</button></span><b class="num" id="ctDisc">–₱0.00</b></div>
-            <div class="tot-row"><span>VAT (12% incl.)</span><b class="num" id="ctVat">₱0.00</b></div>
+            <div class="tot-row" id="vatRow"><span>VAT (12% incl.) <button class="vat-switch" id="vatSwitch" onclick="toggleVat()" role="switch" aria-label="Toggle VAT display" title="VAT-registered business? Toggle to show/hide VAT breakdown"><i></i></button></span><b class="num" id="ctVat">₱0.00</b></div>
             <div class="tot-row big"><span>Total</span><span class="num" id="ctTot">₱0.00</span></div>
           </div>
           <button class="btn btn-p mt" style="width:100%;justify-content:center;padding:13px" onclick="openPay()">Charge&nbsp;<span class="num" id="chargeAmt">₱0.00</span></button>
+        </div>
+      </div>
+      </div><!-- /pt-sale -->
+
+      <div id="pt-log" style="display:none">
+        <div class="grid g4" id="tlogKpis"></div>
+        <div class="card mt">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
+            <input id="tlogSearch" placeholder="Search OR# or product…" style="flex:1;min-width:180px;padding:9px 13px;border:1.5px solid var(--line);border-radius:10px">
+            <select id="tlogMethod" style="padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff"><option value="">All payment methods</option><option>Cash</option><option>GCash</option><option>Maya</option><option>Card</option></select>
+            <select id="tlogStatus" style="padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff"><option value="">All statuses</option><option>Completed</option><option>Voided</option></select>
+            <button class="btn btn-o" onclick="exportTxLogCSV()">⇩ Export CSV</button>
+          </div>
+          <div class="table-scroll"><table id="tlogTable"></table></div>
         </div>
       </div>
     </section>
@@ -272,11 +327,16 @@ td .psku{font-size:11px;color:var(--muted)}
     <section class="view" id="v-inv">
       <div class="topbar">
         <div><h1>Inventory</h1><div class="sub">Stock levels update automatically with every POS sale</div></div>
-        <button class="btn btn-p" onclick="openAddProd()">+ Add product</button>
+        <div style="display:flex;gap:9px;flex-wrap:wrap">
+          <input type="file" id="csvImportInput" accept=".csv" style="display:none" onchange="importCSV(event)">
+          <button class="btn btn-o" onclick="document.getElementById('csvImportInput').click()">⇧ Import CSV</button>
+          <button class="btn btn-o" onclick="exportCSV()">⇩ Export CSV</button>
+          <button class="btn btn-p" onclick="openAddProd()">+ Add product</button>
+        </div>
       </div>
       <div class="grid g3" id="invKpis"></div>
-      <div class="card mt"><table id="invTable"></table></div>
-      <div class="card mt"><h3>Stock movement log</h3><table id="moveLog"></table></div>
+      <div class="card mt"><div class="table-scroll"><table id="invTable"></table></div></div>
+      <div class="card mt"><h3>Stock movement log</h3><div class="table-scroll"><table id="moveLog"></table></div></div>
     </section>
 
     <!-- ================= FINANCE ================= -->
@@ -294,7 +354,7 @@ td .psku{font-size:11px;color:var(--muted)}
         </div>
         <div class="grid g3" id="finKpisB"></div>
         <div class="grid g2 mt">
-          <div class="card"><h3>Profit & Loss — July MTD</h3><table id="pnlB"></table></div>
+          <div class="card"><h3>Profit & Loss — July MTD</h3><div class="table-scroll"><table id="pnlB"></table></div></div>
           <div class="card">
             <h3>Sales by payment method</h3><div id="payChartB"></div>
             <h3 class="mt">Add expense</h3>
@@ -306,7 +366,7 @@ td .psku{font-size:11px;color:var(--muted)}
             <button class="btn btn-p" onclick="addExpenseB()">Record expense</button>
           </div>
         </div>
-        <div class="card mt"><h3>Expense log</h3><table id="expTableB"></table></div>
+        <div class="card mt"><h3>Expense log</h3><div class="table-scroll"><table id="expTableB"></table></div></div>
       </div>
 
       <!-- FULL ACCOUNTING (Enterprise plan) -->
@@ -319,7 +379,7 @@ td .psku{font-size:11px;color:var(--muted)}
         <div class="grid g2 mt">
           <div class="card">
             <h3>Profit & Loss — July MTD</h3>
-            <table id="pnl"></table>
+            <div class="table-scroll"><table id="pnl"></table></div>
           </div>
           <div>
             <div class="card">
@@ -345,12 +405,12 @@ td .psku{font-size:11px;color:var(--muted)}
         <div class="grid g2 mt">
           <div class="card">
             <h3>Cash drawer — today's session</h3>
-            <table id="drawerTable"></table>
+            <div class="table-scroll"><table id="drawerTable"></table></div>
             <button class="btn btn-p mt" onclick="closeDrawer()">Close drawer & count cash</button>
           </div>
           <div class="card">
             <h3>Cash ledger (all money in & out)</h3>
-            <table id="cashLedger"></table>
+            <div class="table-scroll"><table id="cashLedger"></table></div>
           </div>
         </div>
       </div>
@@ -370,7 +430,7 @@ td .psku{font-size:11px;color:var(--muted)}
           </div>
           <div class="card"><h3>By category — MTD</h3><div id="expCatChart"></div></div>
         </div>
-        <div class="card mt"><h3>Expense log</h3><table id="expTable"></table></div>
+        <div class="card mt"><h3>Expense log</h3><div class="table-scroll"><table id="expTable"></table></div></div>
       </div>
 
       <!-- RECEIVABLES -->
@@ -378,7 +438,7 @@ td .psku{font-size:11px;color:var(--muted)}
         <div class="grid g3" id="arKpis"></div>
         <div class="card mt">
           <h3>Listahan — customers who owe you</h3>
-          <table id="arTable"></table>
+          <div class="table-scroll"><table id="arTable"></table></div>
         </div>
         <div class="card mt">
           <h3>Add credit sale (utang)</h3>
@@ -396,7 +456,7 @@ td .psku{font-size:11px;color:var(--muted)}
         <div class="grid g3" id="apKpis"></div>
         <div class="card mt">
           <h3>Bills & suppliers to pay</h3>
-          <table id="apTable"></table>
+          <div class="table-scroll"><table id="apTable"></table></div>
         </div>
       </div>
 
@@ -406,7 +466,7 @@ td .psku{font-size:11px;color:var(--muted)}
         <div class="grid g2 mt">
           <div class="card">
             <h3>Product profitability — where you actually earn</h3>
-            <table id="profitTable"></table>
+            <div class="table-scroll"><table id="profitTable"></table></div>
           </div>
           <div>
             <div class="card">
@@ -415,7 +475,7 @@ td .psku{font-size:11px;color:var(--muted)}
             </div>
             <div class="card mt">
               <h3>Estimated tax provision</h3>
-              <table id="taxTable"></table>
+              <div class="table-scroll"><table id="taxTable"></table></div>
               <p class="note mt">Estimates only, using the 8% flat income-tax option on gross sales less the ₱250k annual exemption (pro-rated). Always confirm with your accountant / BIR RDO.</p>
             </div>
           </div>
@@ -448,7 +508,7 @@ td .psku{font-size:11px;color:var(--muted)}
 
         <div class="hrtab" id="ht-emp">
           <div class="grid g3" id="hrKpis"></div>
-          <div class="card mt"><h3>Employee directory</h3><table id="empTable"></table></div>
+          <div class="card mt"><h3>Employee directory</h3><div class="table-scroll"><table id="empTable"></table></div></div>
           <div class="card mt">
             <h3>Add employee</h3>
             <div class="grid g3">
@@ -462,7 +522,7 @@ td .psku{font-size:11px;color:var(--muted)}
 
         <div class="hrtab" id="ht-att" style="display:none">
           <div class="grid g3" id="attKpis"></div>
-          <div class="card mt"><h3>Today's attendance — July 8</h3><table id="attTable"></table></div>
+          <div class="card mt"><h3>Today's attendance — July 8</h3><div class="table-scroll"><table id="attTable"></table></div></div>
           <p class="note mt" style="padding:0 4px">In the full version, staff time in/out from the POS terminal or their phone; late/undertime rules apply automatically to payroll.</p>
         </div>
 
@@ -470,7 +530,7 @@ td .psku{font-size:11px;color:var(--muted)}
           <div class="grid g3" id="payKpis"></div>
           <div class="card mt">
             <h3>Payroll run — July 1–15 cutoff</h3>
-            <table id="payrollTable"></table>
+            <div class="table-scroll"><table id="payrollTable"></table></div>
             <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
               <button class="btn btn-p" onclick="runPayroll()">✓ Approve & release payroll</button>
               <button class="btn btn-o" onclick="toast('Payslips sent to all employees via SMS/email (demo)')">Send all payslips</button>
@@ -490,13 +550,30 @@ td .psku{font-size:11px;color:var(--muted)}
         <div class="card">
           <h3>Your identity</h3>
           <div class="fld"><label>Business name</label><input id="bizName" value="Barako Coffee Co." maxlength="26"></div>
-          <div class="fld"><label>Logo initials</label><input id="bizInit" value="BC" maxlength="2" style="width:80px;text-transform:uppercase"></div>
+          <div class="fld">
+            <label>Logo</label>
+            <div style="display:flex;align-items:center;gap:12px">
+              <div class="logo-chip" id="logoPreviewChip" style="width:44px;height:44px;font-size:16px;flex:none">BC</div>
+              <div style="flex:1">
+                <input type="file" id="logoUpload" accept="image/*" onchange="handleLogoUpload(event)">
+                <div style="display:flex;gap:8px;margin-top:6px">
+                  <span class="note">PNG or JPG, square works best.</span>
+                  <button type="button" class="btn-sm btn btn-o" id="removeLogoBtn" style="display:none" onclick="removeLogo()">Remove photo</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="fld"><label>Logo initials <span class="note">(shown if no photo is uploaded)</span></label><input id="bizInit" value="BC" maxlength="2" style="width:80px;text-transform:uppercase"></div>
           <div class="fld"><label>Brand color</label>
             <div class="color-row"><input type="color" id="brandColor" value="#0E5F58"><span class="note">Text contrast is auto-adjusted so your receipts and buttons always stay readable.</span></div>
           </div>
           <div class="fld"><label>Accent color</label>
             <div class="color-row"><input type="color" id="accentColor" value="#E8A33D"><span class="note">Used for highlights, alerts and the logo chip.</span></div>
           </div>
+          <h3 class="mt">Receipt details</h3>
+          <div class="fld"><label>Business address</label><input id="bizAddress" value="San Fernando, Pampanga" placeholder="e.g., 123 Rizal St., Olongapo City"></div>
+          <div class="fld"><label>Contact number</label><input id="bizPhone" value="0917-000-0000" placeholder="e.g., 0917-000-0000"></div>
+          <div class="fld"><label>Receipt thank-you message</label><input id="bizFooter" value="Salamat po!" maxlength="40"></div>
           <h3 class="mt">Theme presets</h3>
           <div class="preset-grid" id="presets"></div>
           <p class="note mt">🔒 Branding changes only the look. Your data, features and security stay on the same battle-tested core — that's the Go NegosyoOS promise.</p>
@@ -516,7 +593,7 @@ td .psku{font-size:11px;color:var(--muted)}
           <div class="card mt">
             <h3>Live preview — customer receipt</h3>
             <div class="receipt" style="max-width:300px;margin:0 auto">
-              <div class="rc-head"><div class="rc-logo" data-logo>BC</div><div class="rc-bn" data-bizname>Barako Coffee Co.</div><div style="font-size:10.5px;color:#777">San Fernando, Pampanga · 0917-000-0000</div></div>
+              <div class="rc-head"><div class="rc-logo" data-logo>BC</div><div class="rc-bn" data-bizname>Barako Coffee Co.</div><div style="font-size:10.5px;color:#777" data-bizaddress>San Fernando, Pampanga · 0917-000-0000</div></div>
               <hr>
               <div class="rl"><span>Caramel Macchiato ×1</span><span>₱150.00</span></div>
               <div class="rl"><span>Butter Croissant ×1</span><span>₱75.00</span></div>
@@ -524,7 +601,7 @@ td .psku{font-size:11px;color:var(--muted)}
               <div class="rl tot"><span>TOTAL</span><span>₱225.00</span></div>
               <div class="rl"><span>Cash</span><span>₱300.00</span></div>
               <div class="rl"><span>Change</span><span>₱75.00</span></div>
-              <div class="rc-foot">Salamat po! · Powered by Go NegosyoOS</div>
+              <div class="rc-foot"><span data-bizfooter>Salamat po!</span> · Powered by Go NegosyoOS</div>
             </div>
           </div>
         </div>
@@ -537,18 +614,18 @@ td .psku{font-size:11px;color:var(--muted)}
       <div class="grid g3">
         <div class="card plan-card">
           <div class="tier">Starter</div><div class="price num">₱499</div><div class="per">per month</div>
-          <ul><li>POS + Inventory + Dashboard</li><li>2 users · 300 products</li><li>Logo & preset themes</li><li>Email support</li></ul>
+          <ul><li>Dashboard, POS & Inventory</li><li>2 users · 100 products · 1 branch</li><li>Logo & preset color themes</li><li>Basic branded receipts</li><li>Email support</li></ul>
           <button class="btn btn-o" style="width:100%;justify-content:center" onclick="setPlan('Starter')">Choose Starter</button>
         </div>
         <div class="card plan-card feat">
           <span class="plan-tag">MOST POPULAR</span>
-          <div class="tier">Business</div><div class="price num">₱999</div><div class="per">per month</div>
-          <ul><li>Everything in Starter</li><li>Full Finance module & P&L</li><li>5 users · 2,000 products</li><li>Full brand colors + branded receipts</li><li>Chat support</li></ul>
+          <div class="tier">Business</div><div class="price num">₱1,499</div><div class="per">per month</div>
+          <ul><li>Dashboard, POS & Inventory</li><li>Finance — sales, expenses, P&L</li><li>5 users · 2,000 products · 1 branch</li><li>Full brand colors + branded receipts</li><li>Chat support</li></ul>
           <button class="btn btn-p" style="width:100%;justify-content:center" onclick="setPlan('Business')">Choose Business</button>
         </div>
         <div class="card plan-card">
           <div class="tier">Enterprise</div><div class="price num">₱2,499</div><div class="per">per month</div>
-          <ul><li>Everything in Business</li><li>Full Accounting suite</li><li>HRIS & Payroll (PH-compliant)</li><li>Unlimited users & products</li><li>Multi-branch ready</li><li>Custom subdomain</li><li>Dedicated success manager</li></ul>
+          <ul><li>Dashboard, POS & Inventory</li><li>Full Accounting — cash flow, receivables, payables, insights</li><li>HRIS & Payroll — attendance, payroll runs, payslips</li><li>Unlimited users & products</li><li>Up to 5 branches</li><li>Custom subdomain + branded payslips</li><li>Dedicated success manager</li></ul>
           <button class="btn btn-o" style="width:100%;justify-content:center" onclick="setPlan('Enterprise')">Choose Enterprise</button>
         </div>
       </div>
@@ -579,8 +656,20 @@ td .psku{font-size:11px;color:var(--muted)}
 <!-- add product modal -->
 <div class="overlay" id="apOverlay">
   <div class="modal">
-    <h3>Add product</h3>
-    <div class="fld"><label>Product name</label><input id="apName" placeholder="e.g., Suka 350ml"></div>
+    <h3 id="apModalTitle">Add product</h3>
+    <div class="fld"><label>Product name</label><input id="apName" placeholder="e.g., Vanilla Latte"></div>
+    <div class="grid g2">
+      <div class="fld"><label>SKU</label><input id="apSku" placeholder="auto-generated"></div>
+      <div class="fld"><label>Barcode number</label>
+        <div style="display:flex;gap:6px"><input id="apBarcode" placeholder="auto-generated" style="flex:1"><button type="button" class="iconb" title="Generate new barcode" onclick="document.getElementById('apBarcode').value=genBarcodeNumber()">↻</button></div>
+      </div>
+    </div>
+    <div class="fld">
+      <label>Already have a printed barcode? Upload a photo</label>
+      <input type="file" id="apBarcodeImgInput" accept="image/*" onchange="handleBarcodeImageUpload(event)">
+      <img id="apBarcodeImgPreview" style="display:none;max-width:100%;margin-top:8px;border:1.5px solid var(--line);border-radius:9px">
+      <p class="note" style="margin-top:6px">We'll try to read the number automatically from the photo. If it can't be read, just confirm or type it into the field above — the photo stays linked to this product either way.</p>
+    </div>
     <div class="grid g2">
       <div class="fld"><label>Cost (₱)</label><input id="apCost" type="number" min="0" placeholder="0.00"></div>
       <div class="fld"><label>Price (₱)</label><input id="apPrice" type="number" min="0" placeholder="0.00"></div>
@@ -589,8 +678,17 @@ td .psku{font-size:11px;color:var(--muted)}
       <div class="fld"><label>Initial stock</label><input id="apStock" type="number" min="0" value="20"></div>
       <div class="fld"><label>Reorder point</label><input id="apRe" type="number" min="0" value="10"></div>
     </div>
-    <div class="fld"><label>Category</label><select id="apCat"><option>Beverages</option><option>Snacks</option><option>Canned & Instant</option><option>Personal Care</option><option>Household</option></select></div>
+    <div class="fld"><label>Category</label><select id="apCat"><option>Coffee</option><option>Non-Coffee</option><option>Pastries</option><option>Retail</option></select></div>
     <div style="display:flex;gap:10px"><button class="btn btn-o" style="flex:1;justify-content:center" onclick="closeAddProd()">Cancel</button><button class="btn btn-p" style="flex:1;justify-content:center" onclick="saveProd()">Save product</button></div>
+  </div>
+</div>
+
+<!-- barcode label modal -->
+<div class="overlay" id="bcOverlay">
+  <div class="modal" style="max-width:340px;text-align:center">
+    <h3 style="text-align:left">Barcode Label</h3>
+    <div id="bcLabelBody" style="background:#fff;border:1.5px dashed #ccc;border-radius:10px;padding:16px"></div>
+    <div style="display:flex;gap:10px;margin-top:16px"><button class="btn btn-o" style="flex:1;justify-content:center" onclick="$('#bcOverlay').classList.remove('show')">Close</button><button class="btn btn-p" style="flex:1;justify-content:center" onclick="toast('Sent label to printer (demo)')">Print label</button></div>
   </div>
 </div>
 
@@ -611,30 +709,32 @@ const peso = n => '₱' + n.toLocaleString('en-PH',{minimumFractionDigits:2,maxi
 const peso0 = n => '₱' + Math.round(n).toLocaleString('en-PH');
 
 let products = [
-  {id:1, name:'Kapeng Barako (Hot)', sku:'COF-001', cat:'Coffee', emoji:'☕', img:'https://images.pexels.com/photos/4264049/pexels-photo-4264049.jpeg?auto=compress&cs=tinysrgb&w=400', cost:35, price:95,  stock:40, re:15, sold:62},
-  {id:2, name:'Caramel Macchiato',   sku:'COF-002', cat:'Coffee', emoji:'☕', img:'https://images.pexels.com/photos/5305639/pexels-photo-5305639.jpeg?auto=compress&cs=tinysrgb&w=400', cost:55, price:150, stock:25, re:10, sold:48},
-  {id:3, name:'Cafe Latte',          sku:'COF-003', cat:'Coffee', emoji:'☕', img:'https://images.pexels.com/photos/30630942/pexels-photo-30630942.jpeg?auto=compress&cs=tinysrgb&w=400', cost:48, price:135, stock:30, re:12, sold:55},
-  {id:4, name:'Spanish Latte',       sku:'COF-004', cat:'Coffee', emoji:'☕', img:'https://images.pexels.com/photos/11136849/pexels-photo-11136849.jpeg?auto=compress&cs=tinysrgb&w=400', cost:50, price:140, stock:5,  re:12, sold:40},
-  {id:5, name:'Matcha Latte',        sku:'NC-001',  cat:'Non-Coffee', emoji:'🍵', img:'https://images.pexels.com/photos/32972501/pexels-photo-32972501.jpeg?auto=compress&cs=tinysrgb&w=400', cost:60, price:160, stock:18, re:10, sold:22},
-  {id:6, name:'Hot Chocolate',       sku:'NC-002',  cat:'Non-Coffee', emoji:'🍫', img:'https://images.pexels.com/photos/29325671/pexels-photo-29325671.jpeg?auto=compress&cs=tinysrgb&w=400', cost:45, price:120, stock:20, re:10, sold:15},
-  {id:7, name:'Fresh Milk Tea',      sku:'NC-003',  cat:'Non-Coffee', emoji:'🧋', img:'https://images.pexels.com/photos/12666797/pexels-photo-12666797.jpeg?auto=compress&cs=tinysrgb&w=400', cost:42, price:110, stock:0,  re:10, sold:30},
-  {id:8, name:'Butter Croissant',    sku:'PST-001', cat:'Pastries', emoji:'🥐', img:'https://images.pexels.com/photos/8105045/pexels-photo-8105045.jpeg?auto=compress&cs=tinysrgb&w=400', cost:35, price:75,  stock:22, re:10, sold:33},
-  {id:9, name:'Choco Muffin',        sku:'PST-002', cat:'Pastries', emoji:'🧁', img:'https://images.pexels.com/photos/131899/pexels-photo-131899.jpeg?auto=compress&cs=tinysrgb&w=400', cost:28, price:65,  stock:15, re:8,  sold:20},
-  {id:10,name:'Ensaymada',           sku:'PST-003', cat:'Pastries', emoji:'🍞', img:'https://images.pexels.com/photos/1287278/pexels-photo-1287278.jpeg?auto=compress&cs=tinysrgb&w=400', cost:20, price:45,  stock:30, re:10, sold:18},
-  {id:11,name:'Coffee Beans 250g',   sku:'RTL-001', cat:'Retail', emoji:'🛍️', img:'https://images.pexels.com/photos/18138946/pexels-photo-18138946.jpeg?auto=compress&cs=tinysrgb&w=400', cost:180,price:320, stock:12, re:5,  sold:6},
-  {id:12,name:'Tumbler 500ml',       sku:'RTL-002', cat:'Retail', emoji:'🥤', img:'https://images.pexels.com/photos/20138581/pexels-photo-20138581.jpeg?auto=compress&cs=tinysrgb&w=400', cost:150,price:280, stock:9,  re:5,  sold:3},
+  {id:1, name:'Kapeng Barako (Hot)', sku:'COF-001', barcode:'4801234500019', cat:'Coffee', emoji:'☕', img:'https://images.pexels.com/photos/4264049/pexels-photo-4264049.jpeg?auto=compress&cs=tinysrgb&w=400', cost:35, price:95,  stock:40, re:15, sold:62},
+  {id:2, name:'Caramel Macchiato',   sku:'COF-002', barcode:'4801234500026', cat:'Coffee', emoji:'☕', img:'https://images.pexels.com/photos/5305639/pexels-photo-5305639.jpeg?auto=compress&cs=tinysrgb&w=400', cost:55, price:150, stock:25, re:10, sold:48},
+  {id:3, name:'Cafe Latte',          sku:'COF-003', barcode:'4801234500033', cat:'Coffee', emoji:'☕', img:'https://images.pexels.com/photos/30630942/pexels-photo-30630942.jpeg?auto=compress&cs=tinysrgb&w=400', cost:48, price:135, stock:30, re:12, sold:55},
+  {id:4, name:'Spanish Latte',       sku:'COF-004', barcode:'4801234500040', cat:'Coffee', emoji:'☕', img:'https://images.pexels.com/photos/11136849/pexels-photo-11136849.jpeg?auto=compress&cs=tinysrgb&w=400', cost:50, price:140, stock:5,  re:12, sold:40},
+  {id:5, name:'Matcha Latte',        sku:'NC-001', barcode:'4801234500057',  cat:'Non-Coffee', emoji:'🍵', img:'https://images.pexels.com/photos/32972501/pexels-photo-32972501.jpeg?auto=compress&cs=tinysrgb&w=400', cost:60, price:160, stock:18, re:10, sold:22},
+  {id:6, name:'Hot Chocolate',       sku:'NC-002', barcode:'4801234500064',  cat:'Non-Coffee', emoji:'🍫', img:'https://images.pexels.com/photos/29325671/pexels-photo-29325671.jpeg?auto=compress&cs=tinysrgb&w=400', cost:45, price:120, stock:20, re:10, sold:15},
+  {id:7, name:'Fresh Milk Tea',      sku:'NC-003', barcode:'4801234500071',  cat:'Non-Coffee', emoji:'🧋', img:'https://images.pexels.com/photos/12666797/pexels-photo-12666797.jpeg?auto=compress&cs=tinysrgb&w=400', cost:42, price:110, stock:0,  re:10, sold:30},
+  {id:8, name:'Butter Croissant',    sku:'PST-001', barcode:'4801234500088', cat:'Pastries', emoji:'🥐', img:'https://images.pexels.com/photos/8105045/pexels-photo-8105045.jpeg?auto=compress&cs=tinysrgb&w=400', cost:35, price:75,  stock:22, re:10, sold:33},
+  {id:9, name:'Choco Muffin',        sku:'PST-002', barcode:'4801234500095', cat:'Pastries', emoji:'🧁', img:'https://images.pexels.com/photos/131899/pexels-photo-131899.jpeg?auto=compress&cs=tinysrgb&w=400', cost:28, price:65,  stock:15, re:8,  sold:20},
+  {id:10,name:'Ensaymada',           sku:'PST-003', barcode:'4801234500101', cat:'Pastries', emoji:'🍞', img:'https://images.pexels.com/photos/1287278/pexels-photo-1287278.jpeg?auto=compress&cs=tinysrgb&w=400', cost:20, price:45,  stock:30, re:10, sold:18},
+  {id:11,name:'Coffee Beans 250g',   sku:'RTL-001', barcode:'4801234500118', cat:'Retail', emoji:'🛍️', img:'https://images.pexels.com/photos/18138946/pexels-photo-18138946.jpeg?auto=compress&cs=tinysrgb&w=400', cost:180,price:320, stock:12, re:5,  sold:6},
+  {id:12,name:'Tumbler 500ml',       sku:'RTL-002', barcode:'4801234500125', cat:'Retail', emoji:'🥤', img:'https://images.pexels.com/photos/20138581/pexels-photo-20138581.jpeg?auto=compress&cs=tinysrgb&w=400', cost:150,price:280, stock:9,  re:5,  sold:3},
 ];
 let cart = [];            // {id, qty}
+const DISC_PRESETS = [0,1,2,3,4,5,10,20];
 let discPct = 0;
+let vatOn = true;
 let payMethod = 'Cash';
 let salesToday = 12480;   // seed MTD-style numbers
 let txToday = 47;
 let txLog = [
-  {t:'10:42 AM', items:3, total:186, m:'GCash'},
-  {t:'10:31 AM', items:1, total:75,  m:'Cash'},
-  {t:'10:18 AM', items:6, total:412, m:'Cash'},
-  {t:'9:55 AM',  items:2, total:64,  m:'Maya'},
-  {t:'9:47 AM',  items:4, total:238, m:'Cash'},
+  {id:1042, orNo:100047, t:'10:42 AM', items:3, total:186, m:'GCash', cashier:'Jessa', status:'Completed', lines:null},
+  {id:1031, orNo:100046, t:'10:31 AM', items:1, total:75,  m:'Cash', cashier:'Jessa', status:'Completed', lines:null},
+  {id:1018, orNo:100045, t:'10:18 AM', items:6, total:412, m:'Cash', cashier:'Jessa', status:'Completed', lines:null},
+  {id:955,  orNo:100044, t:'9:55 AM',  items:2, total:64,  m:'Maya', cashier:'Jessa', status:'Completed', lines:null},
+  {id:947,  orNo:100043, t:'9:47 AM',  items:4, total:238, m:'Cash', cashier:'Jessa', status:'Completed', lines:null},
 ];
 let moves = [
   {t:'10:42 AM', p:'Fresh Milk Tea', type:'Sale', q:-3},
@@ -688,7 +788,7 @@ function renderDash(){
   $('#topMovers').innerHTML = '<tr><th>Product</th><th class="ta-r">Sold</th><th class="ta-r">Revenue</th></tr>'+
     top.map(p=>`<tr><td><span class="pname">${p.emoji} ${p.name}</span></td><td class="ta-r num">${p.sold}</td><td class="ta-r num">${peso0(p.sold*p.price)}</td></tr>`).join('');
   $('#recentTx').innerHTML = '<tr><th>Time</th><th>Items</th><th>Method</th><th class="ta-r">Total</th></tr>'+
-    txLog.slice(0,6).map(t=>`<tr><td>${t.t}</td><td class="num">${t.items}</td><td><span class="badge b-brand">${t.m}</span></td><td class="ta-r num">${peso(t.total)}</td></tr>`).join('');
+    txLog.slice(0,6).map(t=>`<tr style="${t.status==='Voided'?'opacity:.5':''}"><td>${t.t}</td><td class="num">${t.items}</td><td><span class="badge b-brand">${t.m}</span></td><td class="ta-r num" style="${t.status==='Voided'?'text-decoration:line-through':''}">${peso(t.total)}</td></tr>`).join('');
   renderSalesChart();
 }
 function goRestock(id){ $$('.nav-btn').find(b=>b.dataset.nav==='inv').click(); toast('Tap ＋ beside the product to receive stock'); }
@@ -716,7 +816,7 @@ function renderCats(){
 function setCat(c){activeCat=c;renderCats();renderProds();}
 function renderProds(){
   const q=($('#posSearch').value||'').toLowerCase();
-  const list=products.filter(p=>(activeCat==='All'||p.cat===activeCat)&&(p.name.toLowerCase().includes(q)||p.sku.toLowerCase().includes(q)));
+  const list=products.filter(p=>(activeCat==='All'||p.cat===activeCat)&&(p.name.toLowerCase().includes(q)||p.sku.toLowerCase().includes(q)||(p.barcode||'').includes(q)));
   $('#prodGrid').innerHTML=list.map(p=>`
     <button class="prod ${p.stock===0?'out':''}" onclick="addToCart(${p.id})">
       <div class="thumb"><img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.parentElement.innerHTML='&lt;span class=&quot;emoji-fallback&quot;&gt;${p.emoji}&lt;/span&gt;'"></div><div class="nm">${p.name}</div>
@@ -738,10 +838,22 @@ function chQty(id,d){const l=cart.find(c=>c.id===id);const p=products.find(x=>x.
   if(l.qty>p.stock){l.qty=p.stock;toast('Stock limit reached');}
   renderCart();}
 function clearCart(){cart=[];discPct=0;$('#discBtn').textContent='0%';renderCart();}
-function cycleDisc(){discPct=(discPct+5)%25;$('#discBtn').textContent=discPct+'%';renderCart();}
+function cycleDisc(){
+  const i=DISC_PRESETS.indexOf(discPct);
+  discPct=DISC_PRESETS[(i+1)%DISC_PRESETS.length];
+  $('#discBtn').textContent=discPct+'%';
+  renderCart();
+}
+function toggleVat(){
+  vatOn=!vatOn;
+  $('#vatSwitch').classList.toggle('on',vatOn);
+  $('#vatRow').classList.toggle('off',!vatOn);
+  toast(vatOn?'VAT breakdown shown on receipts (VAT-registered)':'VAT breakdown hidden on receipts (Non-VAT)');
+  renderCart();
+}
 function cartTotals(){
   const sub=cart.reduce((a,c)=>a+products.find(p=>p.id===c.id).price*c.qty,0);
-  const disc=sub*discPct/100, tot=sub-disc, vat=tot*12/112;
+  const disc=sub*discPct/100, tot=sub-disc, vat=vatOn?tot*12/112:0;
   return {sub,disc,tot,vat};
 }
 function renderCart(){
@@ -778,6 +890,20 @@ function updChange(){
   if(show)$('#changeVal').textContent=peso(got-tot);
 }
 document.addEventListener('input',e=>{if(e.target.id==='cashIn')updChange();if(e.target.id==='posSearch')renderProds();});
+function receiptHTML(rec){
+  const got=rec.got??rec.total, disc=rec.disc||0, discPct=rec.discPct||0, vat=rec.vat||0;
+  return `
+    <div class="rc-head"><div class="rc-logo">${bizLogoInner()}</div><div class="rc-bn">${$('#bizName').value}</div>
+    <div style="font-size:10.5px;color:#777">${[$('#bizAddress').value.trim(),$('#bizPhone').value.trim()].filter(Boolean).join(' · ')}</div>
+    <div style="font-size:10.5px;color:#777">OR# ${rec.orNo}${rec.status==='Voided'?' · <span style="color:var(--bad);font-weight:700">VOIDED</span>':''} · ${rec.t}</div></div><hr>
+    ${(rec.lines||[{name:rec.items+' item(s)',qty:'',amt:rec.total+disc}]).map(l=>`<div class="rl"><span>${l.name}${l.qty?' ×'+l.qty:''}</span><span class="num">${peso(l.amt)}</span></div>`).join('')}
+    ${disc?`<div class="rl"><span>Discount ${discPct}%</span><span class="num">–${peso(disc)}</span></div>`:''}
+    <hr><div class="rl tot"><span>TOTAL</span><span class="num">${peso(rec.total)}</span></div>
+    <div class="rl"><span>${rec.m}</span><span class="num">${peso(got)}</span></div>
+    ${rec.m==='Cash'?`<div class="rl"><span>Change</span><span class="num">${peso(got-rec.total)}</span></div>`:''}
+    ${rec.vatOn?`<div class="rl" style="color:#777"><span>VAT (12% incl.)</span><span class="num">${peso(vat)}</span></div>`:`<div class="rl" style="color:#777"><span>NON-VAT</span><span class="num"></span></div>`}
+    <div class="rc-foot">${rec.status==='Voided'?'Transaction voided — not a valid receipt':($('#bizFooter').value.trim()||'Salamat po!')} · Powered by Go NegosyoOS</div>`;
+}
 function completeSale(){
   const t=cartTotals();
   if(payMethod==='Cash'){const got=parseFloat($('#cashIn').value)||0;
@@ -785,30 +911,145 @@ function completeSale(){
   // deduct stock + log movements (POS-05: atomic in real build)
   const lines=cart.map(c=>{const p=products.find(x=>x.id===c.id);p.stock-=c.qty;p.sold+=c.qty;
     moves.unshift({t:'Just now',p:p.name,type:'Sale',q:-c.qty});
-    return {name:p.name,qty:c.qty,amt:p.price*c.qty};});
+    return {pid:p.id,name:p.name,qty:c.qty,amt:p.price*c.qty};});
   salesToday+=t.tot;txToday++;
   cashOnHand+=t.tot;
   if(payMethod==='Cash'){drawer.cashSales+=t.tot;cashFlow.unshift({t:'Just now',desc:'Cash sale (POS)',in:Math.round(t.tot),out:0});}
-  txLog.unshift({t:'Just now',items:cart.reduce((a,c)=>a+c.qty,0),total:t.tot,m:payMethod});
   const got=payMethod==='Cash'?(parseFloat($('#cashIn').value)||0):t.tot;
+  const rec={
+    id:Date.now(), orNo:100000+txToday, t:'Just now',
+    items:cart.reduce((a,c)=>a+c.qty,0), total:t.tot, disc:t.disc, discPct, vat:t.vat, vatOn,
+    m:payMethod, got, cashier:'Jessa', status:'Completed', lines
+  };
+  txLog.unshift(rec);
   // receipt
-  $('#rcBody').innerHTML=`
-    <div class="rc-head"><div class="rc-logo">${$('#bizInit').value.toUpperCase()}</div><div class="rc-bn">${$('#bizName').value}</div>
-    <div style="font-size:10.5px;color:#777">OR# ${String(100000+txToday)} · ${new Date().toLocaleString('en-PH',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})}</div></div><hr>
-    ${lines.map(l=>`<div class="rl"><span>${l.name} ×${l.qty}</span><span class="num">${peso(l.amt)}</span></div>`).join('')}
-    ${t.disc?`<div class="rl"><span>Discount ${discPct}%</span><span class="num">–${peso(t.disc)}</span></div>`:''}
-    <hr><div class="rl tot"><span>TOTAL</span><span class="num">${peso(t.tot)}</span></div>
-    <div class="rl"><span>${payMethod}</span><span class="num">${peso(got)}</span></div>
-    ${payMethod==='Cash'?`<div class="rl"><span>Change</span><span class="num">${peso(got-t.tot)}</span></div>`:''}
-    <div class="rl" style="color:#777"><span>VAT (12% incl.)</span><span class="num">${peso(t.vat)}</span></div>
-    <div class="rc-foot">Salamat po! · Powered by Go NegosyoOS</div>`;
+  $('#rcBody').innerHTML=receiptHTML(rec);
   clearCart();closePay();
   $('#rcOverlay').classList.add('show');
   renderProds();renderDash();renderInv();renderFin();
 }
 function closeRc(){$('#rcOverlay').classList.remove('show');}
 
+/* ================= TRANSACTION LOG ================= */
+let activePosTab='sale';
+function renderPosTabs(){
+  $('#posTabs').innerHTML=[['sale','🧾 New Sale'],['log','📜 Transaction Log']]
+    .map(([k,l])=>`<button class="chip ${k===activePosTab?'on':''}" onclick="posTab('${k}')">${l}</button>`).join('');
+}
+function posTab(k){
+  activePosTab=k; renderPosTabs();
+  $('#pt-sale').style.display=k==='sale'?'block':'none';
+  $('#pt-log').style.display=k==='log'?'block':'none';
+  if(k==='log') renderTxLog();
+}
+function reprintTx(id){
+  const rec=txLog.find(x=>x.id===id);
+  if(!rec) return;
+  $('#rcBody').innerHTML=receiptHTML(rec);
+  $('#rcOverlay').classList.add('show');
+}
+let voidConfirmId=null;
+function askVoid(id){ voidConfirmId=id; renderTxLog(); }
+function cancelVoid(){ voidConfirmId=null; renderTxLog(); }
+function confirmVoid(id){
+  const rec=txLog.find(x=>x.id===id);
+  if(!rec || rec.status==='Voided') return;
+  rec.status='Voided';
+  salesToday-=rec.total; txToday=Math.max(txToday-1,0);
+  cashOnHand-=rec.total;
+  if(rec.m==='Cash'){ drawer.cashSales-=rec.total; cashFlow.unshift({t:'Just now',desc:'Void reversal — OR# '+rec.orNo,in:0,out:Math.round(rec.total)}); }
+  if(rec.lines){
+    rec.lines.forEach(l=>{
+      const p=products.find(x=>x.id===l.pid);
+      if(p){ p.stock+=l.qty; p.sold=Math.max(p.sold-l.qty,0); moves.unshift({t:'Just now',p:p.name,type:'Adjustment',q:+l.qty}); }
+    });
+  }
+  voidConfirmId=null;
+  toast('OR# '+rec.orNo+' voided — sales, cash & stock reversed');
+  renderTxLog(); renderDash(); renderInv(); renderFin(); renderProds();
+}
+function renderTxLog(){
+  const q=($('#tlogSearch')?.value||'').toLowerCase();
+  const mf=$('#tlogMethod')?.value||'';
+  const sf=$('#tlogStatus')?.value||'';
+  const filtered=txLog.filter(r=>{
+    const matchQ=!q || String(r.orNo).includes(q) || (r.lines||[]).some(l=>l.name.toLowerCase().includes(q));
+    const matchM=!mf || r.m===mf;
+    const matchS=!sf || r.status===sf;
+    return matchQ && matchM && matchS;
+  });
+  const completed=txLog.filter(r=>r.status==='Completed');
+  const voided=txLog.filter(r=>r.status==='Voided');
+  const gross=completed.reduce((a,r)=>a+r.total,0);
+  $('#tlogKpis').innerHTML=`
+    <div class="card kpi"><div class="lbl">Transactions today</div><div class="val num">${completed.length}</div><div class="dl">${txLog.length} total incl. voided</div></div>
+    <div class="card kpi"><div class="lbl">Gross sales</div><div class="val num">${peso0(gross)}</div><div class="dl up">Avg basket ${peso0(gross/(completed.length||1))}</div></div>
+    <div class="card kpi"><div class="lbl">Voided</div><div class="val num" style="color:${voided.length?'var(--bad)':'inherit'}">${voided.length}</div><div class="dl ${voided.length?'dn':''}">${peso0(voided.reduce((a,r)=>a+r.total,0))} reversed</div></div>
+    <div class="card kpi"><div class="lbl">Showing</div><div class="val num">${filtered.length}</div><div class="dl">Filtered results</div></div>`;
+  $('#tlogTable').innerHTML='<tr><th>OR#</th><th>Time</th><th>Items</th><th>Cashier</th><th>Method</th><th class="ta-r">Total</th><th>Status</th><th class="ta-r">Actions</th></tr>'+
+    (filtered.length?filtered.map(r=>{
+      const voidedRow=r.status==='Voided';
+      const itemsLabel=r.lines?r.lines.map(l=>l.name+(l.qty>1?' ×'+l.qty:'')).join(', '):r.items+' item(s)';
+      let actions;
+      if(voidedRow){
+        actions=`<button class="btn btn-sm btn-o" onclick="reprintTx(${r.id})">View</button>`;
+      } else if(voidConfirmId===r.id){
+        actions=`<span style="font-size:11.5px;color:var(--bad);font-weight:700;margin-right:6px">Void this sale?</span><button class="btn btn-sm btn-p" style="background:var(--bad)" onclick="confirmVoid(${r.id})">Yes</button> <button class="btn btn-sm btn-o" onclick="cancelVoid()">No</button>`;
+      } else {
+        actions=`<button class="btn btn-sm btn-o" onclick="reprintTx(${r.id})">Reprint</button> <button class="btn btn-sm btn-o" style="color:var(--bad)" onclick="askVoid(${r.id})">Void</button>`;
+      }
+      return `<tr style="${voidedRow?'opacity:.55':''}"><td class="num">${r.orNo}</td><td>${r.t}</td>
+        <td style="max-width:220px;font-size:12px;color:var(--muted)" title="${itemsLabel}">${itemsLabel.length>36?itemsLabel.slice(0,36)+'…':itemsLabel}</td>
+        <td>${r.cashier||'—'}</td><td><span class="badge b-brand">${r.m}</span></td>
+        <td class="ta-r num" style="${voidedRow?'text-decoration:line-through':''}">${peso(r.total)}</td>
+        <td>${voidedRow?'<span class="badge b-bad">Voided</span>':'<span class="badge b-good">Completed</span>'}</td>
+        <td class="ta-r">${actions}</td></tr>`;
+    }).join(''):'<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:24px">No transactions match your filters.</td></tr>');
+}
+function exportTxLogCSV(){
+  const header=['OR#','Time','Items','Cashier','Method','Total','Status'];
+  const rows=[header, ...txLog.map(r=>[r.orNo,r.t,(r.lines?r.lines.map(l=>l.name+(l.qty>1?' x'+l.qty:'')).join('; '):r.items+' item(s)'),r.cashier||'',r.m,r.total.toFixed(2),r.status])];
+  const csv=rows.map(row=>row.map(csvEscape).join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='go-negosyoos-transactions-'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('Exported '+txLog.length+' transactions to CSV');
+}
+document.addEventListener('input',e=>{if(['tlogSearch'].includes(e.target.id))renderTxLog();});
+document.addEventListener('change',e=>{if(['tlogMethod','tlogStatus'].includes(e.target.id))renderTxLog();});
+
+
 /* ================= INVENTORY ================= */
+function genBarcodeNumber(){
+  let n='480'; for(let i=0;i<9;i++) n+=Math.floor(Math.random()*10); return n;
+}
+function barcodeSVG(code, w=180, h=54){
+  // Deterministic pseudo-barcode: bar widths derived from each digit. Visual only (not a real scannable symbology).
+  const digits=(code||'0').split('').map(Number);
+  const n=digits.length||1, unit=w/(n*3);
+  let x=2, bars='';
+  digits.forEach(d=>{
+    const bw=unit*(1+(d%4)*0.5);
+    bars+=`<rect x="${x.toFixed(1)}" y="0" width="${bw.toFixed(1)}" height="${h-14}" fill="#17211F"/>`;
+    x+=bw+unit*0.6;
+  });
+  return `<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:${h}px">${bars}
+    <text x="${w/2}" y="${h-2}" text-anchor="middle" font-size="11" font-family="ui-monospace,Menlo,monospace" fill="#17211F">${code}</text></svg>`;
+}
+function showBarcode(id){
+  const p=products.find(x=>x.id===id);
+  const visual = p.barcodeImg
+    ? `<img src="${p.barcodeImg}" alt="Linked barcode photo" style="max-width:100%;border-radius:8px;display:block;margin:0 auto"><div class="psku num" style="margin-top:8px;letter-spacing:.05em">${p.barcode||'—'}</div>`
+    : barcodeSVG(p.barcode);
+  $('#bcLabelBody').innerHTML=`
+    <div style="font-weight:700;font-size:14px;margin-bottom:2px">${p.name}</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:10px">${peso(p.price)} · SKU ${p.sku}</div>
+    ${visual}`;
+  $('#bcOverlay').classList.add('show');
+}
 function renderInv(){
   const low=products.filter(p=>p.stock>0&&p.stock<=p.re),out=products.filter(p=>p.stock===0);
   const val=products.reduce((a,p)=>a+p.stock*p.cost,0);
@@ -817,28 +1058,174 @@ function renderInv(){
     <div class="card kpi"><div class="lbl">Stock value at cost</div><div class="val num">${peso0(val)}</div><div class="dl up">Live valuation</div></div>
     <div class="card kpi"><div class="lbl">Attention needed</div><div class="val num">${low.length+out.length}</div><div class="dl ${low.length+out.length?'wr':'up'}">${low.length} low · ${out.length} out of stock</div></div>`;
   const sorted=[...products].sort((a,b)=>(a.stock===0?-1:a.stock<=a.re?0:1)-(b.stock===0?-1:b.stock<=b.re?0:1));
-  $('#invTable').innerHTML='<tr><th>Product</th><th>Category</th><th class="ta-r">Cost</th><th class="ta-r">Price</th><th>Status</th><th class="ta-r">Receive</th></tr>'+
-    sorted.map(p=>`<tr><td><span class="pname">${p.emoji} ${p.name}</span><br><span class="psku">${p.sku}</span></td>
+  $('#invTable').innerHTML='<tr><th>Product</th><th>SKU / Barcode</th><th>Category</th><th class="ta-r">Cost</th><th class="ta-r">Price</th><th>Status</th><th class="ta-r">Actions</th></tr>'+
+    sorted.map(p=>`<tr><td><span class="pname">${p.emoji} ${p.name}</span></td>
+    <td><span class="psku">${p.sku}</span><br><span class="psku num" style="letter-spacing:.03em">${p.barcodeImg?'📷 ':''}${p.barcode||'—'}</span></td>
     <td>${p.cat}</td><td class="ta-r num">${peso(p.cost)}</td><td class="ta-r num">${peso(p.price)}</td>
     <td>${stockBadge(p)}</td>
-    <td class="ta-r"><button class="iconb" title="Receive 10 units" onclick="restock(${p.id})">＋</button></td></tr>`).join('');
+    <td class="ta-r"><span style="display:inline-flex;gap:6px"><button class="iconb" title="View / print barcode" onclick="showBarcode(${p.id})">▤</button><button class="iconb" title="Edit product" onclick="openEditProd(${p.id})">✎</button><button class="iconb" title="Receive 10 units" onclick="restock(${p.id})">＋</button></span></td></tr>`).join('');
   $('#moveLog').innerHTML='<tr><th>When</th><th>Product</th><th>Type</th><th class="ta-r">Qty</th></tr>'+
     moves.slice(0,8).map(m=>`<tr><td>${m.t}</td><td>${m.p}</td><td><span class="badge ${m.type==='Sale'?'b-brand':m.type==='Restock'?'b-good':'b-warn'}">${m.type}</span></td><td class="ta-r num" style="color:${m.q<0?'var(--bad)':'var(--good)'}">${m.q>0?'+':''}${m.q}</td></tr>`).join('');
 }
 function restock(id){const p=products.find(x=>x.id===id);p.stock+=10;
   moves.unshift({t:'Just now',p:p.name,type:'Restock',q:+10});
   toast('Received 10 × '+p.name);renderInv();renderDash();renderProds();}
-function openAddProd(){$('#apOverlay').classList.add('show');setTimeout(()=>$('#apName').focus(),50);}
-function closeAddProd(){$('#apOverlay').classList.remove('show');}
+
+let editingProductId=null;
+let pendingBarcodeImg=null;
+
+function resetProdModalFields(){
+  ['apName','apCost','apPrice','apSku','apBarcode'].forEach(i=>$('#'+i).value='');
+  $('#apStock').value=20; $('#apRe').value=10; $('#apCat').selectedIndex=0;
+  $('#apBarcodeImgInput').value='';
+  $('#apBarcodeImgPreview').style.display='none'; $('#apBarcodeImgPreview').src='';
+  pendingBarcodeImg=null;
+}
+function openAddProd(){
+  editingProductId=null;
+  resetProdModalFields();
+  $('#apModalTitle').textContent='Add product';
+  $('#apOverlay').classList.add('show');
+  $('#apSku').value='NEW-'+String(products.length+1).padStart(3,'0');
+  $('#apBarcode').value=genBarcodeNumber();
+  setTimeout(()=>$('#apName').focus(),50);
+}
+function openEditProd(id){
+  const p=products.find(x=>x.id===id);
+  if(!p) return;
+  editingProductId=id;
+  resetProdModalFields();
+  $('#apModalTitle').textContent='Edit product';
+  $('#apName').value=p.name; $('#apSku').value=p.sku; $('#apBarcode').value=p.barcode||'';
+  $('#apCost').value=p.cost; $('#apPrice').value=p.price; $('#apStock').value=p.stock; $('#apRe').value=p.re;
+  $('#apCat').value=p.cat;
+  if(p.barcodeImg){ $('#apBarcodeImgPreview').src=p.barcodeImg; $('#apBarcodeImgPreview').style.display='block'; pendingBarcodeImg=p.barcodeImg; }
+  $('#apOverlay').classList.add('show');
+  setTimeout(()=>$('#apName').focus(),50);
+}
+function closeAddProd(){$('#apOverlay').classList.remove('show');editingProductId=null;}
+
+async function tryDecodeBarcodeImage(file){
+  if(!('BarcodeDetector' in window)) return null;
+  try{
+    const formats=['ean_13','ean_8','upc_a','upc_e','code_128','code_39','codabar','itf'];
+    const detector=new BarcodeDetector({formats});
+    const bitmap=await createImageBitmap(file);
+    const codes=await detector.detect(bitmap);
+    if(codes && codes.length) return codes[0].rawValue;
+  }catch(err){ /* decoding failed — caller falls back to manual entry */ }
+  return null;
+}
+function handleBarcodeImageUpload(evt){
+  const file=evt.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=async e=>{
+    $('#apBarcodeImgPreview').src=e.target.result;
+    $('#apBarcodeImgPreview').style.display='block';
+    pendingBarcodeImg=e.target.result;
+    toast('Reading barcode from photo…');
+    const decoded=await tryDecodeBarcodeImage(file);
+    if(decoded){
+      $('#apBarcode').value=decoded;
+      toast('Barcode detected: '+decoded+' ✓');
+    } else {
+      toast("Couldn't auto-read that photo — please confirm the number above. The photo is still linked to this product.");
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
 function saveProd(){
   const n=$('#apName').value.trim(),c=+$('#apCost').value,pr=+$('#apPrice').value,s=+$('#apStock').value,r=+$('#apRe').value;
+  const sku=$('#apSku').value.trim()||('NEW-'+String(products.length+1).padStart(3,'0'));
+  const barcode=$('#apBarcode').value.trim()||genBarcodeNumber();
   if(!n||!pr){toast('Product name and price are required');return;}
+  if(products.some(p=>p.sku===sku && p.id!==editingProductId)){toast('SKU "'+sku+'" already exists — use a unique SKU');return;}
   if(c&&pr<=c){toast('Heads up: price is not above cost — no margin');}
-  products.push({id:Date.now(),name:n,sku:'NEW-'+String(products.length+1).padStart(3,'0'),cat:$('#apCat').value,emoji:'📦',cost:c||0,price:pr,stock:s||0,re:r||10,sold:0});
-  moves.unshift({t:'Just now',p:n,type:'Restock',q:+(s||0)});
-  closeAddProd();toast('"'+n+'" added to catalog');
-  ['apName','apCost','apPrice'].forEach(i=>$('#'+i).value='');
+  if(editingProductId){
+    const p=products.find(x=>x.id===editingProductId);
+    const stockDelta=s-p.stock;
+    Object.assign(p,{name:n,sku,barcode,barcodeImg:pendingBarcodeImg,cat:$('#apCat').value,cost:c||0,price:pr,stock:s||0,re:r||10});
+    if(stockDelta!==0) moves.unshift({t:'Just now',p:n,type:'Adjustment',q:stockDelta});
+    closeAddProd();toast('"'+n+'" updated');
+  } else {
+    products.push({id:Date.now(),name:n,sku,barcode,barcodeImg:pendingBarcodeImg,cat:$('#apCat').value,emoji:'📦',cost:c||0,price:pr,stock:s||0,re:r||10,sold:0});
+    moves.unshift({t:'Just now',p:n,type:'Restock',q:+(s||0)});
+    closeAddProd();toast('"'+n+'" added to catalog');
+  }
   renderInv();renderProds();renderCats();renderDash();
+}
+
+/* ---- CSV Import / Export ---- */
+function csvEscape(v){ v=String(v??''); return /[",\n]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v; }
+function exportCSV(){
+  const cols=['name','sku','barcode','cat','cost','price','stock','re'];
+  const header=['Name','SKU','Barcode','Category','Cost','Price','Stock','ReorderPoint'];
+  const rows=[header, ...products.map(p=>cols.map(c=>csvEscape(p[c])))];
+  const csv=rows.map(r=>r.join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='go-negosyoos-inventory-'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('Exported '+products.length+' products to CSV');
+}
+function parseCSVLine(line){
+  const out=[]; let cur='',inQ=false;
+  for(let i=0;i<line.length;i++){
+    const ch=line[i];
+    if(inQ){
+      if(ch==='"'&&line[i+1]==='"'){cur+='"';i++;}
+      else if(ch==='"'){inQ=false;}
+      else cur+=ch;
+    } else {
+      if(ch==='"'){inQ=true;}
+      else if(ch===','){out.push(cur);cur='';}
+      else cur+=ch;
+    }
+  }
+  out.push(cur);
+  return out;
+}
+function importCSV(evt){
+  const file=evt.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const lines=e.target.result.split(/\r?\n/).filter(l=>l.trim().length);
+      if(lines.length<2){toast('CSV has no data rows');return;}
+      const header=parseCSVLine(lines[0]).map(h=>h.trim().toLowerCase());
+      const idx=k=>header.indexOf(k);
+      let added=0, updated=0;
+      for(let i=1;i<lines.length;i++){
+        const cells=parseCSVLine(lines[i]);
+        const name=cells[idx('name')]?.trim();
+        const sku=cells[idx('sku')]?.trim();
+        if(!name||!sku) continue;
+        const barcode=cells[idx('barcode')]?.trim()||genBarcodeNumber();
+        const cat=cells[idx('category')]?.trim()||'Coffee';
+        const cost=+cells[idx('cost')]||0, price=+cells[idx('price')]||0;
+        const stock=+cells[idx('stock')]||0, re=+cells[idx('reorderpoint')]||10;
+        const existing=products.find(p=>p.sku===sku);
+        if(existing){
+          Object.assign(existing,{name,barcode,cat,cost,price,stock,re});
+          updated++;
+        } else {
+          products.push({id:Date.now()+i,name,sku,barcode,cat,emoji:'📦',cost,price,stock,re,sold:0});
+          added++;
+        }
+      }
+      toast(`Import complete — ${added} added, ${updated} updated`);
+      renderInv();renderProds();renderCats();renderDash();
+    }catch(err){
+      toast('Could not read that CSV — check the format and try again');
+    }
+    evt.target.value='';
+  };
+  reader.readAsText(file);
 }
 
 /* ================= FINANCE & ACCOUNTING ================= */
@@ -1189,7 +1576,7 @@ function showPayslip(id){
   const e=employees.find(x=>x.id===id);
   const g=e.rate*e.days,d=deductions(g);
   $('#psBody').innerHTML=`
-    <div class="rc-head"><div class="rc-logo">${$('#bizInit').value.toUpperCase()}</div><div class="rc-bn">${$('#bizName').value}</div>
+    <div class="rc-head"><div class="rc-logo">${bizLogoInner()}</div><div class="rc-bn">${$('#bizName').value}</div>
     <div style="font-size:10.5px;color:#777">PAYSLIP · Cutoff Jul 1–15, 2026 · Payday Jul 15</div></div><hr>
     <div class="rl"><span><b>${e.name}</b></span><span>${e.role}</span></div>
     <div class="rl"><span>Status</span><span>${e.status}</span></div><hr>
@@ -1217,6 +1604,30 @@ const PRESETS=[
 function hexToRgb(h){h=h.replace('#','');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
 function luminance(h){const [r,g,b]=hexToRgb(h).map(v=>{v/=255;return v<=.03928?v/12.92:((v+.055)/1.055)**2.4});return .2126*r+.7152*g+.0722*b;}
 function mix(h,pct,to=[0,0,0]){const c=hexToRgb(h);return '#'+c.map((v,i)=>Math.round(v*(1-pct)+to[i]*pct).toString(16).padStart(2,'0')).join('');}
+let brandLogoUrl=null;
+function bizLogoInner(){
+  return brandLogoUrl ? `<img src="${brandLogoUrl}" alt="logo">` : ($('#bizInit').value||'YB').toUpperCase();
+}
+function handleLogoUpload(evt){
+  const file=evt.target.files[0];
+  if(!file) return;
+  if(!file.type.startsWith('image/')){toast('Please choose an image file (PNG or JPG)');return;}
+  const reader=new FileReader();
+  reader.onload=e=>{
+    brandLogoUrl=e.target.result;
+    $('#removeLogoBtn').style.display='inline-flex';
+    applyBrand();
+    toast('Logo uploaded — applied across the workspace');
+  };
+  reader.readAsDataURL(file);
+}
+function removeLogo(){
+  brandLogoUrl=null;
+  $('#logoUpload').value='';
+  $('#removeLogoBtn').style.display='none';
+  applyBrand();
+  toast('Logo removed — showing initials instead');
+}
 function applyBrand(){
   const b=$('#brandColor').value,a=$('#accentColor').value;
   const r=document.documentElement.style;
@@ -1225,9 +1636,14 @@ function applyBrand(){
   r.setProperty('--brand-soft',mix(b,.9,[255,255,255]));
   r.setProperty('--brand-contrast',luminance(b)>.45?'#17211F':'#FFFFFF');
   r.setProperty('--accent',a);
-  const nm=$('#bizName').value||'Your Business', init=($('#bizInit').value||'YB').toUpperCase();
+  const nm=$('#bizName').value||'Your Business';
   $$('[data-bizname]').forEach(e=>e.textContent=nm);
-  $$('[data-logo]').forEach(e=>e.textContent=init);
+  $$('[data-logo]').forEach(e=>e.innerHTML=bizLogoInner());
+  $('#logoPreviewChip').innerHTML=bizLogoInner();
+  const addr=$('#bizAddress').value.trim(), ph=$('#bizPhone').value.trim();
+  $$('[data-bizaddress]').forEach(e=>e.textContent=[addr,ph].filter(Boolean).join(' · '));
+  const foot=$('#bizFooter').value.trim()||'Salamat po!';
+  $$('[data-bizfooter]').forEach(e=>e.textContent=foot);
   document.title=nm+' — Powered by Go NegosyoOS';
 }
 function renderPresets(){
@@ -1240,15 +1656,18 @@ function usePreset(i){
   const p=PRESETS[i];
   $('#brandColor').value=p.b;$('#accentColor').value=p.a;
   $('#bizName').value=p.name;$('#bizInit').value=p.init;
+  removeLogo();
   applyBrand();toast('Theme applied: '+p.n+' — same system, your brand ✨');
 }
-['brandColor','accentColor','bizName','bizInit'].forEach(id=>$('#'+id).addEventListener('input',applyBrand));
+['brandColor','accentColor','bizName','bizInit','bizAddress','bizPhone','bizFooter'].forEach(id=>$('#'+id).addEventListener('input',applyBrand));
+
 
 /* overlay dismiss on backdrop */
 $$('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show');}));
 
 /* ================= INIT ================= */
-renderDash();renderCats();renderProds();renderCart();renderInv();renderFin();renderHR();renderPresets();
+$('#vatSwitch').classList.add('on');
+renderDash();renderCats();renderProds();renderCart();renderInv();renderFin();renderHR();renderPresets();renderPosTabs();
 
 </script>
 </body>
