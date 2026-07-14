@@ -9,8 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --brand:#0E5F58; --brand-ink:#0A423D; --brand-soft:#E3EFED; --brand-contrast:#FFFFFF;
-  --accent:#E8A33D;
+  --brand:#1B5FA8; --brand-ink:#103761; --brand-soft:#E8EFF6; --brand-contrast:#FFFFFF;
+  --accent:#16A34A;
   --bg:#F3F5F4; --surface:#FFFFFF; --ink:#17211F; --muted:#5E6B68; --line:#E1E7E5;
   --good:#188A5C; --warn:#B47A0E; --bad:#C24333;
   --radius:14px; --shadow:0 1px 2px rgba(23,33,31,.05),0 6px 20px rgba(23,33,31,.06);
@@ -18,8 +18,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-html{overflow-x:hidden}
-body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased;overflow-x:hidden;width:100%}
+body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased;width:100%}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input,select,textarea{font-family:inherit;font-size:14px}
 .num{font-variant-numeric:tabular-nums}
@@ -30,8 +29,8 @@ input,select,textarea{font-family:inherit;font-size:14px}
 .app{display:grid;grid-template-columns:236px 1fr;min-height:100vh}
 .side{background:linear-gradient(178deg,var(--brand-ink),color-mix(in srgb,var(--brand-ink) 82%, #000 18%));color:#fff;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
 .side-brand{display:flex;align-items:center;gap:10px;padding:20px 18px 16px}
-.logo-chip{width:38px;height:38px;border-radius:11px;background:var(--accent);color:var(--brand-ink);display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:15px;flex:none;overflow:hidden}
-.logo-chip img{width:100%;height:100%;object-fit:cover;display:block}
+.logo-chip{min-width:38px;height:38px;padding:0 5px;border-radius:11px;background:var(--accent);color:var(--brand-ink);display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:14px;letter-spacing:-.02em;flex:none;overflow:hidden}
+.logo-chip img{width:100%;height:100%;object-fit:cover;display:block;margin:0 -5px}
 .side-brand .bn{font-family:var(--font-display);font-weight:700;font-size:15px;line-height:1.15;letter-spacing:.01em}
 .side-brand .bt{font-size:10.5px;opacity:.62;margin-top:2px}
 .side nav{padding:6px 10px;flex:1}
@@ -99,7 +98,9 @@ td .psku{font-size:11px;color:var(--muted)}
 .chip{font-size:12px;font-weight:600;padding:6px 13px;border-radius:99px;border:1.5px solid var(--line);background:var(--surface);color:var(--muted)}
 .chip.on{background:var(--brand);border-color:var(--brand);color:var(--brand-contrast)}
 .prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(136px,1fr));gap:11px}
-.prod{background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:12px;text-align:left;transition:border-color .12s,transform .12s;position:relative}
+.prod{background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:12px;text-align:left;transition:border-color .12s,transform .12s,background .12s;position:relative}
+.prod.selected{border-color:var(--brand);background:var(--brand-soft);box-shadow:0 0 0 1px var(--brand)}
+.prod .qty-badge{position:absolute;top:-8px;right:-8px;min-width:24px;height:24px;padding:0 6px;border-radius:99px;background:var(--brand);color:var(--brand-contrast);display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:800;font-family:var(--font-display);box-shadow:0 2px 6px rgba(0,0,0,.25);z-index:2}
 .prod:hover{border-color:var(--brand);transform:translateY(-1px)}
 .prod:active{transform:scale(.97)}
 .prod .emoji{font-size:26px}
@@ -116,6 +117,9 @@ td .psku{font-size:11px;color:var(--muted)}
 .cline{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px dashed var(--line)}
 .cline .cn{flex:1;min-width:0}.cline .cn b{font-size:12.5px;display:block}.cline .cn span{font-size:11px;color:var(--muted)}
 .qty{display:flex;align-items:center;gap:6px}
+.qty-input{width:36px;text-align:center;border:1.5px solid var(--line);border-radius:8px;padding:4px 2px;font-size:13px;font-weight:700;color:var(--ink);background:var(--surface);-moz-appearance:textfield}
+.qty-input:focus{border-color:var(--brand);outline:none}
+.qty-input::-webkit-outer-spin-button,.qty-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .qty b{min-width:20px;text-align:center;font-size:13px}
 .tot-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;color:var(--muted)}
 .tot-row.big{font-size:17px;color:var(--ink);font-weight:700;font-family:var(--font-display);padding-top:8px;border-top:2px solid var(--ink);margin-top:6px}
@@ -143,8 +147,8 @@ td .psku{font-size:11px;color:var(--muted)}
 /* ---------- receipt ---------- */
 .receipt{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;background:#fff;border:1px dashed #bbb;border-radius:8px;padding:18px 16px;color:#222}
 .receipt .rc-head{text-align:center;margin-bottom:10px}
-.receipt .rc-logo{width:34px;height:34px;border-radius:9px;background:var(--brand);color:var(--brand-contrast);display:inline-grid;place-items:center;font-weight:800;font-family:var(--font-display);margin-bottom:6px;overflow:hidden}
-.receipt .rc-logo img{width:100%;height:100%;object-fit:cover;display:block}
+.receipt .rc-logo{min-width:34px;height:34px;padding:0 5px;border-radius:9px;background:var(--brand);color:var(--brand-contrast);display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-family:var(--font-display);font-size:13px;letter-spacing:-.02em;margin-bottom:6px;overflow:hidden}
+.receipt .rc-logo img{width:100%;height:100%;object-fit:cover;display:block;margin:0 -5px}
 .receipt .rc-bn{font-weight:800;font-size:13px;font-family:var(--font-body)}
 .receipt hr{border:none;border-top:1px dashed #ccc;margin:8px 0}
 .receipt .rl{display:flex;justify-content:space-between;gap:8px;padding:1.5px 0}
@@ -184,6 +188,7 @@ td .psku{font-size:11px;color:var(--muted)}
 
 /* ---------- toast ---------- */
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;padding:11px 20px;border-radius:12px;font-size:13px;font-weight:600;z-index:99;transition:transform .25s;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.fab-charge{display:none}
 .toast.show{transform:translateX(-50%) translateY(0)}
 
 .view{display:none;animation:fadein .25s}
@@ -194,6 +199,7 @@ td .psku{font-size:11px;color:var(--muted)}
 @media(max-width:960px){
   .app{grid-template-columns:1fr}
   .main{min-width:0}
+  .grid>*{min-width:0}
   .side{position:fixed;bottom:0;top:auto;height:auto;width:100%;flex-direction:row;align-items:center;z-index:40;padding:0;padding-bottom:env(safe-area-inset-bottom)}
   .side-brand,.nav-lbl,.side-foot{display:none}
   .side nav{display:flex;flex:1;padding:6px;justify-content:space-around}
@@ -209,6 +215,7 @@ td .psku{font-size:11px;color:var(--muted)}
   /* iOS: inputs under 16px trigger auto-zoom on focus — bump to 16px on touch-sized viewports */
   input,select,textarea{font-size:16px}
   .search input{font-size:16px}
+  .qty-input{font-size:16px;width:42px;padding:4px 1px}
   .btn-sm{font-size:12px}
   /* tab strips scroll horizontally instead of wrapping into multiple rows */
   .cat-row{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px;margin:0 -2px 14px;padding-left:2px;padding-right:2px}
@@ -225,6 +232,13 @@ td .psku{font-size:11px;color:var(--muted)}
   .prod-grid{grid-template-columns:repeat(2,1fr)}
   .table-scroll{position:relative}
   .table-scroll::after{content:'';position:absolute;top:0;right:0;bottom:0;width:22px;background:linear-gradient(to right,rgba(246,247,245,0),rgba(23,33,31,.08));pointer-events:none}
+  .fab-charge{position:fixed;left:16px;right:16px;bottom:calc(66px + env(safe-area-inset-bottom));z-index:45;
+    background:var(--brand);color:var(--brand-contrast);border:none;border-radius:14px;padding:13px 18px;
+    display:none;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:14px;
+    box-shadow:0 10px 26px rgba(0,0,0,.28);animation:fabIn .2s ease-out}
+  .fab-charge span:first-child{opacity:.85;font-weight:600}
+  .fab-charge span:last-child{font-size:12px;opacity:.85}
+  @keyframes fabIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 }
 @media(max-width:520px){
   .g4,.g3,.g2{grid-template-columns:1fr}
@@ -238,8 +252,8 @@ td .psku{font-size:11px;color:var(--muted)}
 <div class="app">
   <aside class="side">
     <div class="side-brand">
-      <div class="logo-chip" data-logo>BC</div>
-      <div><div class="bn" data-bizname>Barako Coffee Co.</div><div class="bt">Powered by Go NegosyoOS</div></div>
+      <div class="logo-chip" data-logo>UC</div>
+      <div><div class="bn" data-bizname>Umaga Coffee Co.</div><div class="bt">Powered by Go NegosyoOS</div></div>
     </div>
     <nav>
       <div class="nav-lbl">Operations</div>
@@ -259,7 +273,7 @@ td .psku{font-size:11px;color:var(--muted)}
     <!-- ================= DASHBOARD ================= -->
     <section class="view on" id="v-dash">
       <div class="topbar">
-        <div><h1>Magandang umaga, Boss! 👋</h1><div class="sub">Here's how <b data-bizname>Barako Coffee Co.</b> is doing today — Wednesday, July 8, 2026</div></div>
+        <div><h1>Magandang umaga, Boss! 👋</h1><div class="sub">Here's how <b data-bizname>Umaga Coffee Co.</b> is doing today — Wednesday, July 8, 2026</div></div>
         <span class="live-dot"><i></i>Live · syncing</span>
       </div>
       <div class="grid g4" id="kpis"></div>
@@ -304,7 +318,7 @@ td .psku{font-size:11px;color:var(--muted)}
             <div class="tot-row" id="vatRow"><span>VAT (12% incl.) <button class="vat-switch" id="vatSwitch" onclick="toggleVat()" role="switch" aria-label="Toggle VAT display" title="VAT-registered business? Toggle to show/hide VAT breakdown"><i></i></button></span><b class="num" id="ctVat">₱0.00</b></div>
             <div class="tot-row big"><span>Total</span><span class="num" id="ctTot">₱0.00</span></div>
           </div>
-          <button class="btn btn-p mt" style="width:100%;justify-content:center;padding:13px" onclick="openPay()">Charge&nbsp;<span class="num" id="chargeAmt">₱0.00</span></button>
+          <button id="chargeBtn" class="btn btn-p mt" style="width:100%;justify-content:center;padding:13px" onclick="openPay()">Charge&nbsp;<span class="num" id="chargeAmt">₱0.00</span></button>
         </div>
       </div>
       </div><!-- /pt-sale -->
@@ -323,6 +337,12 @@ td .psku{font-size:11px;color:var(--muted)}
       </div>
     </section>
 
+    <!-- Mobile-only floating button: jump to the Charge button when it's scrolled out of view -->
+    <button id="fabCharge" class="fab-charge" onclick="scrollToCharge()" style="display:none">
+      <span>View Cart</span><span class="num" id="fabChargeAmt">₱0.00</span><span aria-hidden="true">↓</span>
+    </button>
+
+
     <!-- ================= INVENTORY ================= -->
     <section class="view" id="v-inv">
       <div class="topbar">
@@ -335,7 +355,24 @@ td .psku{font-size:11px;color:var(--muted)}
         </div>
       </div>
       <div class="grid g3" id="invKpis"></div>
-      <div class="card mt"><div class="table-scroll"><table id="invTable"></table></div></div>
+      <div class="card mt">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
+          <input id="invSearch" placeholder="Search name, SKU or barcode…" style="flex:1;min-width:180px;padding:9px 13px;border:1.5px solid var(--line);border-radius:10px">
+          <select id="invCatFilter" style="padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff"><option value="">All categories</option></select>
+          <select id="invStatusFilter" style="padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff">
+            <option value="">All statuses</option><option value="in">In stock</option><option value="low">Low stock</option><option value="out">Out of stock</option>
+          </select>
+          <select id="invSort" style="padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff">
+            <option value="name-asc">Name (A–Z)</option><option value="name-desc">Name (Z–A)</option>
+            <option value="stock-asc">Stock (low → high)</option><option value="stock-desc">Stock (high → low)</option>
+            <option value="price-asc">Price (low → high)</option><option value="price-desc">Price (high → low)</option>
+            <option value="cost-asc">Cost (low → high)</option><option value="cost-desc">Cost (high → low)</option>
+            <option value="status">Status (attention first)</option>
+          </select>
+          <button class="btn btn-o" onclick="resetInvFilters()">Reset</button>
+        </div>
+        <div class="table-scroll"><table id="invTable"></table></div>
+      </div>
       <div class="card mt"><h3>Stock movement log</h3><div class="table-scroll"><table id="moveLog"></table></div></div>
     </section>
 
@@ -401,6 +438,7 @@ td .psku{font-size:11px;color:var(--muted)}
 
       <!-- CASH FLOW -->
       <div class="fintab" id="ft-cash" style="display:none">
+        <div class="cat-row" id="cashPeriodTabs"></div>
         <div class="grid g3" id="cashKpis"></div>
         <div class="grid g2 mt">
           <div class="card">
@@ -409,7 +447,7 @@ td .psku{font-size:11px;color:var(--muted)}
             <button class="btn btn-p mt" onclick="closeDrawer()">Close drawer & count cash</button>
           </div>
           <div class="card">
-            <h3>Cash ledger (all money in & out)</h3>
+            <h3 id="cashLedgerTitle">Cash ledger — this week</h3>
             <div class="table-scroll"><table id="cashLedger"></table></div>
           </div>
         </div>
@@ -496,7 +534,7 @@ td .psku{font-size:11px;color:var(--muted)}
         <div class="card" style="text-align:center;padding:46px 22px;max-width:620px;margin:30px auto">
           <div style="font-size:40px">🔒</div>
           <h3 style="font-size:19px;margin:12px 0 8px">HR & Payroll is an Enterprise feature</h3>
-          <p class="note" style="max-width:440px;margin:0 auto 18px">Employee 201 files, attendance, semi-monthly payroll with SSS · PhilHealth · Pag-IBIG deductions, 13th-month accrual, and branded payslips — all computed automatically from one system.</p>
+          <p class="note" style="max-width:440px;margin:0 auto 18px">Employee 201 files, real Time In/Out tracking with automatic late & overtime detection, semi-monthly payroll computed from actual hours worked — SSS · PhilHealth · Pag-IBIG deductions, 13th-month accrual, and branded payslips, all automatic.</p>
           <button class="btn btn-a" onclick="setPlan('Enterprise')">Upgrade to Enterprise — ₱2,499/mo</button>
           <p class="note mt">Included in Enterprise alongside the full Accounting suite.</p>
         </div>
@@ -523,7 +561,7 @@ td .psku{font-size:11px;color:var(--muted)}
         <div class="hrtab" id="ht-att" style="display:none">
           <div class="grid g3" id="attKpis"></div>
           <div class="card mt"><h3>Today's attendance — July 8</h3><div class="table-scroll"><table id="attTable"></table></div></div>
-          <p class="note mt" style="padding:0 4px">In the full version, staff time in/out from the POS terminal or their phone; late/undertime rules apply automatically to payroll.</p>
+          <p class="note mt" style="padding:0 4px">Time In / Time Out are captured live and compared against the 8:00 AM–5:00 PM schedule — late minutes and overtime flow straight into the payroll run, no manual entry needed.</p>
         </div>
 
         <div class="hrtab" id="ht-pay" style="display:none">
@@ -549,11 +587,11 @@ td .psku{font-size:11px;color:var(--muted)}
       <div class="brand-wrap">
         <div class="card">
           <h3>Your identity</h3>
-          <div class="fld"><label>Business name</label><input id="bizName" value="Barako Coffee Co." maxlength="26"></div>
+          <div class="fld"><label>Business name</label><input id="bizName" value="Umaga Coffee Co." maxlength="50"></div>
           <div class="fld">
             <label>Logo</label>
             <div style="display:flex;align-items:center;gap:12px">
-              <div class="logo-chip" id="logoPreviewChip" style="width:44px;height:44px;font-size:16px;flex:none">BC</div>
+              <div class="logo-chip" id="logoPreviewChip" style="min-width:44px;height:44px;font-size:17px;flex:none">UC</div>
               <div style="flex:1">
                 <input type="file" id="logoUpload" accept="image/*" onchange="handleLogoUpload(event)">
                 <div style="display:flex;gap:8px;margin-top:6px">
@@ -563,17 +601,20 @@ td .psku{font-size:11px;color:var(--muted)}
               </div>
             </div>
           </div>
-          <div class="fld"><label>Logo initials <span class="note">(shown if no photo is uploaded)</span></label><input id="bizInit" value="BC" maxlength="2" style="width:80px;text-transform:uppercase"></div>
+          <div class="fld"><label>Logo initials <span class="note">(shown if no photo is uploaded)</span></label>
+            <div style="display:flex;gap:6px"><input id="bizInit" value="UC" maxlength="5" style="width:110px;text-transform:uppercase"><button type="button" class="iconb" title="Auto-generate from business name" onclick="autoDeriveInitials()">↻</button></div>
+            <span class="note">Up to 5 characters — e.g., "The Yellow House Beverages" → TYHB</span>
+          </div>
           <div class="fld"><label>Brand color</label>
-            <div class="color-row"><input type="color" id="brandColor" value="#0E5F58"><span class="note">Text contrast is auto-adjusted so your receipts and buttons always stay readable.</span></div>
+            <div class="color-row"><input type="color" id="brandColor" value="#1B5FA8"><span class="note">Text contrast is auto-adjusted so your receipts and buttons always stay readable.</span></div>
           </div>
           <div class="fld"><label>Accent color</label>
-            <div class="color-row"><input type="color" id="accentColor" value="#E8A33D"><span class="note">Used for highlights, alerts and the logo chip.</span></div>
+            <div class="color-row"><input type="color" id="accentColor" value="#16A34A"><span class="note">Used for highlights, alerts and the logo chip.</span></div>
           </div>
           <h3 class="mt">Receipt details</h3>
-          <div class="fld"><label>Business address</label><input id="bizAddress" value="San Fernando, Pampanga" placeholder="e.g., 123 Rizal St., Olongapo City"></div>
-          <div class="fld"><label>Contact number</label><input id="bizPhone" value="0917-000-0000" placeholder="e.g., 0917-000-0000"></div>
-          <div class="fld"><label>Receipt thank-you message</label><input id="bizFooter" value="Salamat po!" maxlength="40"></div>
+          <div class="fld"><label>Business address</label><input id="bizAddress" value="Rizal Highway, Barretto, Olongapo City" placeholder="e.g., 123 Rizal St., Olongapo City"></div>
+          <div class="fld"><label>Contact number</label><input id="bizPhone" value="0917-234-5678" placeholder="e.g., 0917-000-0000"></div>
+          <div class="fld"><label>Receipt thank-you message</label><input id="bizFooter" value="Maligayang umaga! Salamat po." maxlength="40"></div>
           <h3 class="mt">Theme presets</h3>
           <div class="preset-grid" id="presets"></div>
           <p class="note mt">🔒 Branding changes only the look. Your data, features and security stay on the same battle-tested core — that's the Go NegosyoOS promise.</p>
@@ -582,7 +623,7 @@ td .psku{font-size:11px;color:var(--muted)}
           <div class="card">
             <h3>Live preview — your workspace</h3>
             <div class="mini-preview">
-              <div class="mp-top"><div class="logo-chip" data-logo style="width:30px;height:30px;font-size:12px">BC</div><b data-bizname style="font-family:var(--font-display)">Barako Coffee Co.</b></div>
+              <div class="mp-top"><div class="logo-chip" data-logo style="min-width:30px;height:30px;font-size:12px">UC</div><b data-bizname style="font-family:var(--font-display)">Umaga Coffee Co.</b></div>
               <div style="padding:14px;display:flex;gap:10px;flex-wrap:wrap">
                 <button class="btn btn-p btn-sm">Primary action</button>
                 <button class="btn btn-a btn-sm">Accent action</button>
@@ -593,7 +634,7 @@ td .psku{font-size:11px;color:var(--muted)}
           <div class="card mt">
             <h3>Live preview — customer receipt</h3>
             <div class="receipt" style="max-width:300px;margin:0 auto">
-              <div class="rc-head"><div class="rc-logo" data-logo>BC</div><div class="rc-bn" data-bizname>Barako Coffee Co.</div><div style="font-size:10.5px;color:#777" data-bizaddress>San Fernando, Pampanga · 0917-000-0000</div></div>
+              <div class="rc-head"><div class="rc-logo" data-logo>UC</div><div class="rc-bn" data-bizname>Umaga Coffee Co.</div><div style="font-size:10.5px;color:#777" data-bizaddress>Rizal Highway, Barretto, Olongapo City · 0917-234-5678</div></div>
               <hr>
               <div class="rl"><span>Caramel Macchiato ×1</span><span>₱150.00</span></div>
               <div class="rl"><span>Butter Croissant ×1</span><span>₱75.00</span></div>
@@ -620,12 +661,12 @@ td .psku{font-size:11px;color:var(--muted)}
         <div class="card plan-card feat">
           <span class="plan-tag">MOST POPULAR</span>
           <div class="tier">Business</div><div class="price num">₱1,499</div><div class="per">per month</div>
-          <ul><li>Dashboard, POS & Inventory</li><li>Finance — sales, expenses, P&L</li><li>5 users · 2,000 products · 1 branch</li><li>Full brand colors + branded receipts</li><li>Chat support</li></ul>
+          <ul><li>Dashboard, POS & Inventory</li><li>Finance — sales, expenses, Profit & Loss</li><li>5 users · 2,000 products · 1 branch</li><li>Full brand colors + branded receipts</li><li>Chat support</li></ul>
           <button class="btn btn-p" style="width:100%;justify-content:center" onclick="setPlan('Business')">Choose Business</button>
         </div>
         <div class="card plan-card">
           <div class="tier">Enterprise</div><div class="price num">₱2,499</div><div class="per">per month</div>
-          <ul><li>Dashboard, POS & Inventory</li><li>Full Accounting — cash flow, receivables, payables, insights</li><li>HRIS & Payroll — attendance, payroll runs, payslips</li><li>Unlimited users & products</li><li>Up to 5 branches</li><li>Custom subdomain + branded payslips</li><li>Dedicated success manager</li></ul>
+          <ul><li>Dashboard, POS & Inventory</li><li>Full Accounting — cash flow, receivables, payables, insights</li><li>HRIS & Payroll — Time In/Out tracking, accurate hours-based payroll, payslips</li><li>Unlimited users & products</li><li>Up to 5 branches</li><li>Custom subdomain + branded payslips</li><li>Dedicated success manager</li></ul>
           <button class="btn btn-o" style="width:100%;justify-content:center" onclick="setPlan('Enterprise')">Choose Enterprise</button>
         </div>
       </div>
@@ -701,6 +742,14 @@ td .psku{font-size:11px;color:var(--muted)}
   </div>
 </div>
 
+<div class="overlay" id="tlogEmpOverlay">
+  <div class="modal" style="max-width:460px">
+    <h3 id="tlogEmpTitle">Time log</h3>
+    <div class="table-scroll"><table id="tlogEmpTable"></table></div>
+    <button class="btn btn-o mt" style="width:100%;justify-content:center" onclick="$('#tlogEmpOverlay').classList.remove('show')">Close</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -764,7 +813,28 @@ $$('.nav-btn').forEach(b=>b.onclick=()=>{
   $$('.nav-btn').forEach(x=>x.classList.remove('on')); b.classList.add('on');
   $$('.view').forEach(v=>v.classList.remove('on')); $('#v-'+b.dataset.nav).classList.add('on');
   window.scrollTo({top:0});
+  updateFabVisibility();
 });
+
+/* ================= MOBILE: floating "jump to Charge" button ================= */
+let chargeBtnOnScreen=true;
+function scrollToCharge(){
+  $('#chargeBtn').scrollIntoView({behavior:'smooth', block:'center'});
+}
+function updateFabVisibility(){
+  const isMobile=window.matchMedia('(max-width:960px)').matches;
+  const onPosSaleTab=$('#v-pos').classList.contains('on') && activePosTab==='sale';
+  const show = isMobile && onPosSaleTab && cart.length>0 && !chargeBtnOnScreen;
+  $('#fabCharge').style.display = show ? 'flex' : 'none';
+  if(show) $('#fabChargeAmt').textContent = $('#chargeAmt').textContent;
+}
+const chargeBtnObserver = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ chargeBtnOnScreen = e.isIntersecting; });
+  updateFabVisibility();
+}, {threshold:0.15});
+chargeBtnObserver.observe($('#chargeBtn'));
+window.addEventListener('resize', updateFabVisibility);
+window.addEventListener('scroll', updateFabVisibility, {passive:true});
 
 /* ================= DASHBOARD ================= */
 function renderDash(){
@@ -817,11 +887,15 @@ function setCat(c){activeCat=c;renderCats();renderProds();}
 function renderProds(){
   const q=($('#posSearch').value||'').toLowerCase();
   const list=products.filter(p=>(activeCat==='All'||p.cat===activeCat)&&(p.name.toLowerCase().includes(q)||p.sku.toLowerCase().includes(q)||(p.barcode||'').includes(q)));
-  $('#prodGrid').innerHTML=list.map(p=>`
-    <button class="prod ${p.stock===0?'out':''}" onclick="addToCart(${p.id})">
+  $('#prodGrid').innerHTML=list.map(p=>{
+    const inCart=cart.find(c=>c.id===p.id);
+    const qty=inCart?inCart.qty:0;
+    return `
+    <button class="prod ${p.stock===0?'out':''} ${qty?'selected':''}" onclick="addToCart(${p.id})">
+      ${qty?`<span class="qty-badge">${qty}</span>`:''}
       <div class="thumb"><img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.parentElement.innerHTML='&lt;span class=&quot;emoji-fallback&quot;&gt;${p.emoji}&lt;/span&gt;'"></div><div class="nm">${p.name}</div>
       <div class="pr num">${peso(p.price)}</div><div class="st">${p.stock===0?'Out of stock':p.stock+' in stock'}</div>
-    </button>`).join('')||'<div class="empty">No products match your search.</div>';
+    </button>`;}).join('')||'<div class="empty">No products match your search.</div>';
   $('#posToday').textContent='Today: '+peso0(salesToday)+' · '+txToday+' sales';
 }
 function addToCart(id){
@@ -830,14 +904,14 @@ function addToCart(id){
   const inCart=line?line.qty:0;
   if(inCart>=p.stock){toast('Only '+p.stock+' in stock for '+p.name);return;}
   line?line.qty++:cart.push({id,qty:1});
-  renderCart();
+  renderCart();renderProds();
 }
 function chQty(id,d){const l=cart.find(c=>c.id===id);const p=products.find(x=>x.id===id);
   if(!l)return; l.qty+=d;
   if(l.qty<=0)cart=cart.filter(c=>c.id!==id);
   if(l.qty>p.stock){l.qty=p.stock;toast('Stock limit reached');}
-  renderCart();}
-function clearCart(){cart=[];discPct=0;$('#discBtn').textContent='0%';renderCart();}
+  renderCart();renderProds();}
+function clearCart(){cart=[];discPct=0;$('#discBtn').textContent='0%';renderCart();renderProds();}
 function cycleDisc(){
   const i=DISC_PRESETS.indexOf(discPct);
   discPct=DISC_PRESETS[(i+1)%DISC_PRESETS.length];
@@ -860,12 +934,22 @@ function renderCart(){
   $('#cartLines').innerHTML=cart.length?cart.map(c=>{
     const p=products.find(x=>x.id===c.id);
     return `<div class="cline"><div class="cn"><b>${p.name}</b><span class="num">${peso(p.price)} each</span></div>
-      <div class="qty"><button class="iconb" onclick="chQty(${c.id},-1)">−</button><b class="num">${c.qty}</b><button class="iconb" onclick="chQty(${c.id},1)">＋</button></div>
+      <div class="qty"><button class="iconb" onclick="chQty(${c.id},-1)">−</button><input class="qty-input num" type="number" inputmode="numeric" min="0" max="${p.stock}" value="${c.qty}" onchange="setQty(${c.id}, this.value)" onclick="this.select()"><button class="iconb" onclick="chQty(${c.id},1)">＋</button></div>
       <b class="num" style="min-width:64px;text-align:right">${peso(p.price*c.qty)}</b></div>`;}).join('')
     :'<div class="empty">Cart is empty.<br>Tap a product to begin.</div>';
   const t=cartTotals();
   $('#ctSub').textContent=peso(t.sub);$('#ctDisc').textContent='–'+peso(t.disc);
   $('#ctVat').textContent=peso(t.vat);$('#ctTot').textContent=peso(t.tot);$('#chargeAmt').textContent=peso(t.tot);
+  updateFabVisibility();
+}
+function setQty(id, raw){
+  const p=products.find(x=>x.id===id);
+  let n=Math.floor(Number(raw));
+  if(!Number.isFinite(n) || n<0){ toast('Enter a valid quantity'); setTimeout(renderCart,0); return; }
+  if(n>p.stock){ n=p.stock; toast('Only '+p.stock+' in stock for '+p.name); }
+  if(n<=0){ cart=cart.filter(c=>c.id!==id); }
+  else { const l=cart.find(c=>c.id===id); if(l) l.qty=n; }
+  setTimeout(()=>{renderCart();renderProds();},0);
 }
 /* payment */
 function openPay(){
@@ -914,7 +998,7 @@ function completeSale(){
     return {pid:p.id,name:p.name,qty:c.qty,amt:p.price*c.qty};});
   salesToday+=t.tot;txToday++;
   cashOnHand+=t.tot;
-  if(payMethod==='Cash'){drawer.cashSales+=t.tot;cashFlow.unshift({t:'Just now',desc:'Cash sale (POS)',in:Math.round(t.tot),out:0});}
+  if(payMethod==='Cash'){drawer.cashSales+=t.tot;cashFlow.unshift({d:8,t:'Just now',desc:'Cash sale (POS)',in:Math.round(t.tot),out:0});}
   const got=payMethod==='Cash'?(parseFloat($('#cashIn').value)||0):t.tot;
   const rec={
     id:Date.now(), orNo:100000+txToday, t:'Just now',
@@ -941,6 +1025,7 @@ function posTab(k){
   $('#pt-sale').style.display=k==='sale'?'block':'none';
   $('#pt-log').style.display=k==='log'?'block':'none';
   if(k==='log') renderTxLog();
+  updateFabVisibility();
 }
 function reprintTx(id){
   const rec=txLog.find(x=>x.id===id);
@@ -957,7 +1042,7 @@ function confirmVoid(id){
   rec.status='Voided';
   salesToday-=rec.total; txToday=Math.max(txToday-1,0);
   cashOnHand-=rec.total;
-  if(rec.m==='Cash'){ drawer.cashSales-=rec.total; cashFlow.unshift({t:'Just now',desc:'Void reversal — OR# '+rec.orNo,in:0,out:Math.round(rec.total)}); }
+  if(rec.m==='Cash'){ drawer.cashSales-=rec.total; cashFlow.unshift({d:8,t:'Just now',desc:'Void reversal — OR# '+rec.orNo,in:0,out:Math.round(rec.total)}); }
   if(rec.lines){
     rec.lines.forEach(l=>{
       const p=products.find(x=>x.id===l.pid);
@@ -1050,6 +1135,18 @@ function showBarcode(id){
     ${visual}`;
   $('#bcOverlay').classList.add('show');
 }
+function statusRank(p){ return p.stock===0?0:(p.stock<=p.re?1:2); } // for "attention first" sort
+function populateInvCatFilter(){
+  const sel=$('#invCatFilter');
+  const cur=sel.value;
+  const cats=[...new Set(products.map(p=>p.cat))];
+  sel.innerHTML='<option value="">All categories</option>'+cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+  if(cats.includes(cur)) sel.value=cur;
+}
+function resetInvFilters(){
+  $('#invSearch').value=''; $('#invCatFilter').value=''; $('#invStatusFilter').value=''; $('#invSort').value='name-asc';
+  renderInv();
+}
 function renderInv(){
   const low=products.filter(p=>p.stock>0&&p.stock<=p.re),out=products.filter(p=>p.stock===0);
   const val=products.reduce((a,p)=>a+p.stock*p.cost,0);
@@ -1057,16 +1154,45 @@ function renderInv(){
     <div class="card kpi"><div class="lbl">Products</div><div class="val num">${products.length}</div><div class="dl">Across ${new Set(products.map(p=>p.cat)).size} categories</div></div>
     <div class="card kpi"><div class="lbl">Stock value at cost</div><div class="val num">${peso0(val)}</div><div class="dl up">Live valuation</div></div>
     <div class="card kpi"><div class="lbl">Attention needed</div><div class="val num">${low.length+out.length}</div><div class="dl ${low.length+out.length?'wr':'up'}">${low.length} low · ${out.length} out of stock</div></div>`;
-  const sorted=[...products].sort((a,b)=>(a.stock===0?-1:a.stock<=a.re?0:1)-(b.stock===0?-1:b.stock<=b.re?0:1));
+
+  populateInvCatFilter();
+  const q=($('#invSearch')?.value||'').toLowerCase();
+  const catF=$('#invCatFilter')?.value||'';
+  const statF=$('#invStatusFilter')?.value||'';
+  const sortV=$('#invSort')?.value||'name-asc';
+
+  let list=products.filter(p=>{
+    const matchQ=!q || p.name.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q) || (p.barcode||'').includes(q);
+    const matchCat=!catF || p.cat===catF;
+    const st=p.stock===0?'out':(p.stock<=p.re?'low':'in');
+    const matchStat=!statF || st===statF;
+    return matchQ && matchCat && matchStat;
+  });
+
+  const [key,dir]=sortV==='status'?['status','asc']:sortV.split('-');
+  list.sort((a,b)=>{
+    let r=0;
+    if(key==='name') r=a.name.localeCompare(b.name);
+    else if(key==='stock') r=a.stock-b.stock;
+    else if(key==='price') r=a.price-b.price;
+    else if(key==='cost') r=a.cost-b.cost;
+    else if(key==='status') r=statusRank(a)-statusRank(b);
+    return dir==='desc'?-r:r;
+  });
+
   $('#invTable').innerHTML='<tr><th>Product</th><th>SKU / Barcode</th><th>Category</th><th class="ta-r">Cost</th><th class="ta-r">Price</th><th>Status</th><th class="ta-r">Actions</th></tr>'+
-    sorted.map(p=>`<tr><td><span class="pname">${p.emoji} ${p.name}</span></td>
+    (list.length?list.map(p=>`<tr><td><span class="pname">${p.emoji} ${p.name}</span></td>
     <td><span class="psku">${p.sku}</span><br><span class="psku num" style="letter-spacing:.03em">${p.barcodeImg?'📷 ':''}${p.barcode||'—'}</span></td>
     <td>${p.cat}</td><td class="ta-r num">${peso(p.cost)}</td><td class="ta-r num">${peso(p.price)}</td>
     <td>${stockBadge(p)}</td>
-    <td class="ta-r"><span style="display:inline-flex;gap:6px"><button class="iconb" title="View / print barcode" onclick="showBarcode(${p.id})">▤</button><button class="iconb" title="Edit product" onclick="openEditProd(${p.id})">✎</button><button class="iconb" title="Receive 10 units" onclick="restock(${p.id})">＋</button></span></td></tr>`).join('');
+    <td class="ta-r"><span style="display:inline-flex;gap:6px"><button class="iconb" title="View / print barcode" onclick="showBarcode(${p.id})">▤</button><button class="iconb" title="Edit product" onclick="openEditProd(${p.id})">✎</button><button class="iconb" title="Receive 10 units" onclick="restock(${p.id})">＋</button></span></td></tr>`).join('')
+    :'<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:24px">No products match your search or filters.</td></tr>');
   $('#moveLog').innerHTML='<tr><th>When</th><th>Product</th><th>Type</th><th class="ta-r">Qty</th></tr>'+
     moves.slice(0,8).map(m=>`<tr><td>${m.t}</td><td>${m.p}</td><td><span class="badge ${m.type==='Sale'?'b-brand':m.type==='Restock'?'b-good':'b-warn'}">${m.type}</span></td><td class="ta-r num" style="color:${m.q<0?'var(--bad)':'var(--good)'}">${m.q>0?'+':''}${m.q}</td></tr>`).join('');
 }
+document.addEventListener('input',e=>{if(e.target.id==='invSearch')renderInv();});
+document.addEventListener('change',e=>{if(['invCatFilter','invStatusFilter','invSort'].includes(e.target.id))renderInv();});
+
 function restock(id){const p=products.find(x=>x.id===id);p.stock+=10;
   moves.unshift({t:'Just now',p:p.name,type:'Restock',q:+10});
   toast('Received 10 × '+p.name);renderInv();renderDash();renderProds();}
@@ -1243,12 +1369,16 @@ let payables = [
 ];
 let drawer = {opened:'8:02 AM', float:2000, cashSales:0, payouts:640};
 let cashFlow = [
-  {t:'Jul 8 · 8:02 AM', desc:'Opening float', in:2000, out:0},
-  {t:'Jul 7', desc:'Cash sales (day total)', in:9120, out:0},
-  {t:'Jul 7', desc:'Meralco bill payment', in:0, out:3850},
-  {t:'Jul 5', desc:'Store rent — July', in:0, out:8000},
-  {t:'Jul 5', desc:'Cash sales (day total)', in:11250, out:0},
-  {t:'Jul 3', desc:'Cups, lids & napkins', in:0, out:640},
+  {d:8, t:'Jul 8 · 8:02 AM', desc:'Opening float', in:2000, out:0},
+  {d:7, t:'Jul 7', desc:'Cash sales (day total)', in:9120, out:0},
+  {d:7, t:'Jul 7', desc:'Meralco bill payment', in:0, out:3850},
+  {d:5, t:'Jul 5', desc:'Store rent — July', in:0, out:8000},
+  {d:5, t:'Jul 5', desc:'Cash sales (day total)', in:11250, out:0},
+  {d:3, t:'Jul 3', desc:'Cups, lids & napkins', in:0, out:640},
+  {d:2, t:'Jul 2', desc:'Cash sales (day total)', in:8700, out:0},
+  {d:1, t:'Jul 1', desc:'Payroll — Jun 16-30 cutoff', in:0, out:16200},
+  {d:1, t:'Jul 1', desc:'Green Bean Supplier Co. — payment', in:0, out:6800},
+  {d:1, t:'Jul 1', desc:'Cash sales (day total)', in:7950, out:0},
 ];
 const months = [
   {m:'Feb', rev:64200, exp:41800}, {m:'Mar', rev:71500, exp:44100},
@@ -1257,6 +1387,12 @@ const months = [
 ];
 let cashOnHand = 34250;
 let activeFinTab = 'overview';
+let cashPeriod = 'week';
+function setCashPeriod(p){ cashPeriod=p; renderFin(); }
+function renderCashPeriodTabs(){
+  $('#cashPeriodTabs').innerHTML = [['week','This Week'],['month','This Month']]
+    .map(([k,l])=>`<button class="chip ${k===cashPeriod?'on':''}" onclick="setCashPeriod('${k}')">${l}</button>`).join('');
+}
 
 const FIN_TABS = [
   ['overview','📊 Overview'], ['cash','💵 Cash Flow'], ['exp','🧾 Expenses'],
@@ -1309,7 +1445,7 @@ function addExpenseB(){
   const d=$('#expDescB').value.trim(),a=+$('#expAmtB').value;
   if(!d||!a||a<=0){toast('Enter a description and a valid amount');return;}
   expenses.unshift({d:'Jul 8',desc:d,cat:$('#expCatB').value,amt:a});
-  cashFlow.unshift({t:'Jul 8',desc:d,in:0,out:a});
+  cashFlow.unshift({d:8,t:'Jul 8',desc:d,in:0,out:a});
   cashOnHand-=a; drawer.payouts+=a;
   $('#expDescB').value='';$('#expAmtB').value='';
   toast('Expense recorded — P&L updated');renderFin();renderDash();
@@ -1350,12 +1486,17 @@ function renderFin(){
   renderMonthChart();
 
   /* ---- CASH FLOW ---- */
-  const cashIn = cashFlow.reduce((a,c)=>a+c.in,0), cashOut = cashFlow.reduce((a,c)=>a+c.out,0);
+  renderCashPeriodTabs();
+  const TODAY_DAY=8; // demo "today" = July 8, 2026
+  const scoped = cashPeriod==='week' ? cashFlow.filter(c=>(c.d??TODAY_DAY) >= TODAY_DAY-6) : cashFlow;
+  const cashIn = scoped.reduce((a,c)=>a+c.in,0), cashOut = scoped.reduce((a,c)=>a+c.out,0);
+  const periodLabel = cashPeriod==='week' ? 'this week' : 'this month';
   const expected = drawer.float + drawer.cashSales - drawer.payouts;
   $('#cashKpis').innerHTML = `
-    <div class="card kpi"><div class="lbl">Cash in · this week</div><div class="val num" style="color:var(--good)">＋${peso0(cashIn)}</div><div class="dl">Sales & float</div></div>
-    <div class="card kpi"><div class="lbl">Cash out · this week</div><div class="val num" style="color:var(--bad)">−${peso0(cashOut)}</div><div class="dl">Bills, rent, supplies</div></div>
+    <div class="card kpi"><div class="lbl">Cash in · ${periodLabel}</div><div class="val num" style="color:var(--good)">＋${peso0(cashIn)}</div><div class="dl">Sales & float</div></div>
+    <div class="card kpi"><div class="lbl">Cash out · ${periodLabel}</div><div class="val num" style="color:var(--bad)">−${peso0(cashOut)}</div><div class="dl">Bills, rent, supplies</div></div>
     <div class="card kpi"><div class="lbl">Net cash flow</div><div class="val num" style="color:${cashIn-cashOut>=0?'var(--good)':'var(--bad)'}">${peso0(cashIn-cashOut)}</div><div class="dl ${cashIn-cashOut>=0?'up':'dn'}">${cashIn-cashOut>=0?'Positive — pera pumapasok':'Negative — bantayan ang labasan'}</div></div>`;
+  $('#cashLedgerTitle').textContent = 'Cash ledger — ' + periodLabel;
   $('#drawerTable').innerHTML = `
     <tr><td>Session opened</td><td class="ta-r">${drawer.opened}</td></tr>
     <tr><td>Opening float</td><td class="ta-r num">${peso(drawer.float)}</td></tr>
@@ -1363,7 +1504,7 @@ function renderFin(){
     <tr><td>− Payouts / expenses from drawer</td><td class="ta-r num" style="color:var(--bad)">${peso(drawer.payouts)}</td></tr>
     <tr><td><b>Expected cash in drawer</b></td><td class="ta-r num"><b>${peso(expected)}</b></td></tr>`;
   $('#cashLedger').innerHTML = '<tr><th>When</th><th>Description</th><th class="ta-r">In</th><th class="ta-r">Out</th></tr>'+
-    cashFlow.map(c=>`<tr><td>${c.t}</td><td>${c.desc}</td><td class="ta-r num" style="color:var(--good)">${c.in?'+'+peso0(c.in):''}</td><td class="ta-r num" style="color:var(--bad)">${c.out?'−'+peso0(c.out):''}</td></tr>`).join('');
+    scoped.map(c=>`<tr><td>${c.t}</td><td>${c.desc}</td><td class="ta-r num" style="color:var(--good)">${c.in?'+'+peso0(c.in):''}</td><td class="ta-r num" style="color:var(--bad)">${c.out?'−'+peso0(c.out):''}</td></tr>`).join('');
 
   /* ---- EXPENSES ---- */
   $('#expCatChart').innerHTML = Object.entries(byCat).sort((a,b)=>b[1]-a[1]).map(([c,v])=>barRow(c,v,catMax,'var(--accent)')).join('');
@@ -1433,16 +1574,16 @@ function addExpense(){
   const d=$('#expDesc').value.trim(),a=+$('#expAmt').value;
   if(!d||!a||a<=0){toast('Enter a description and a valid amount');return;}
   expenses.unshift({d:'Jul 8',desc:d,cat:$('#expCat').value,amt:a});
-  cashFlow.unshift({t:'Jul 8',desc:d,in:0,out:a});
+  cashFlow.unshift({d:8,t:'Jul 8',desc:d,in:0,out:a});
   cashOnHand-=a; drawer.payouts+=a;
   $('#expDesc').value='';$('#expAmt').value='';
   toast('Expense recorded — P&L, cash flow & drawer updated');renderFin();renderDash();
 }
 function payAR(i){receivables[i].paid=true;cashOnHand+=receivables[i].amt;
-  cashFlow.unshift({t:'Jul 8',desc:'Collection — '+receivables[i].name,in:receivables[i].amt,out:0});
+  cashFlow.unshift({d:8,t:'Jul 8',desc:'Collection — '+receivables[i].name,in:receivables[i].amt,out:0});
   toast('Collected '+peso0(receivables[i].amt)+' from '+receivables[i].name);renderFin();}
 function payAP(i){payables[i].paid=true;cashOnHand-=payables[i].amt;
-  cashFlow.unshift({t:'Jul 8',desc:'Paid — '+payables[i].sup,in:0,out:payables[i].amt});
+  cashFlow.unshift({d:8,t:'Jul 8',desc:'Paid — '+payables[i].sup,in:0,out:payables[i].amt});
   toast('Paid '+payables[i].sup+' · '+peso0(payables[i].amt));renderFin();}
 function addAR(){
   const n=$('#arName').value.trim(),a=+$('#arAmt').value;
@@ -1474,18 +1615,51 @@ function renderMonthChart(){
 
 
 /* ================= HR & PAYROLL (Enterprise) ================= */
+/* ================= HR & PAYROLL — TIME TRACKING ================= */
+const SHIFT_START = 8*60;   // 8:00 AM, in minutes from midnight
+const SHIFT_END   = 17*60;  // 5:00 PM
+const BREAK_MINS  = 60;     // unpaid lunch, deducted once span exceeds 5 hours
+
 let employees = [
-  {id:1, name:'Jessa Ramos',    role:'Barista',        rate:610, days:11, status:'Regular'},
-  {id:2, name:'Marco Villanueva',role:'Store Manager', rate:950, days:12, status:'Regular'},
-  {id:3, name:'Liza Bautista',  role:'Barista',        rate:610, days:10, status:'Probationary'},
-  {id:4, name:'Ramil Santos',   role:'Stockroom / Delivery',rate:560, days:12, status:'Regular'},
+  {id:1, name:'Jessa Ramos',    role:'Barista',              rate:610, status:'Regular'},
+  {id:2, name:'Marco Villanueva',role:'Store Manager',       rate:950, status:'Regular'},
+  {id:3, name:'Liza Bautista',  role:'Barista',              rate:610, status:'Probationary'},
+  {id:4, name:'Ramil Santos',   role:'Stockroom / Delivery', rate:560, status:'Regular'},
 ];
-let attendance = [
-  {name:'Jessa Ramos',    tin:'7:58 AM', tout:'—', st:'Present'},
-  {name:'Marco Villanueva',tin:'7:45 AM', tout:'—', st:'Present'},
-  {name:'Liza Bautista',  tin:'8:22 AM', tout:'—', st:'Late'},
-  {name:'Ramil Santos',   tin:'—',       tout:'—', st:'Rest day'},
+
+// Historical time logs for the current cutoff (Jul 1–15), completed days only (Jul 1–4, 6–7; Jul 5 was a rest day for everyone).
+let attendanceLog = [
+  {empId:1, date:'Jul 1', timeIn:'8:00 AM', timeOut:'5:00 PM', hours:8,    ot:0, lateMins:0,  undertimeMins:0,  status:'Present'},
+  {empId:1, date:'Jul 2', timeIn:'8:04 AM', timeOut:'5:00 PM', hours:8,    ot:0, lateMins:4,  undertimeMins:0,  status:'Late'},
+  {empId:1, date:'Jul 3', timeIn:'7:55 AM', timeOut:'5:00 PM', hours:8,    ot:0, lateMins:0,  undertimeMins:0,  status:'Present'},
+  {empId:1, date:'Jul 4', timeIn:'8:00 AM', timeOut:'6:00 PM', hours:9,    ot:1, lateMins:0,  undertimeMins:0,  status:'Present'},
+  {empId:1, date:'Jul 6', timeIn:'7:59 AM', timeOut:'5:01 PM', hours:8,    ot:0, lateMins:0,  undertimeMins:0,  status:'Present'},
+  {empId:1, date:'Jul 7', timeIn:'8:10 AM', timeOut:'5:00 PM', hours:8,    ot:0, lateMins:10, undertimeMins:0,  status:'Late'},
+
+  {empId:2, date:'Jul 1', timeIn:'7:45 AM', timeOut:'5:00 PM', hours:8, ot:0, lateMins:0, undertimeMins:0, status:'Present'},
+  {empId:2, date:'Jul 2', timeIn:'7:50 AM', timeOut:'5:00 PM', hours:8, ot:0, lateMins:0, undertimeMins:0, status:'Present'},
+  {empId:2, date:'Jul 3', timeIn:'7:48 AM', timeOut:'5:00 PM', hours:8, ot:0, lateMins:0, undertimeMins:0, status:'Present'},
+  {empId:2, date:'Jul 4', timeIn:'7:50 AM', timeOut:'5:00 PM', hours:8, ot:0, lateMins:0, undertimeMins:0, status:'Present'},
+  {empId:2, date:'Jul 6', timeIn:'7:45 AM', timeOut:'5:00 PM', hours:8, ot:0, lateMins:0, undertimeMins:0, status:'Present'},
+  {empId:2, date:'Jul 7', timeIn:'7:50 AM', timeOut:'5:00 PM', hours:8, ot:0, lateMins:0, undertimeMins:0, status:'Present'},
+
+  {empId:3, date:'Jul 1', timeIn:'8:22 AM', timeOut:'5:00 PM', hours:7.63, ot:0, lateMins:22, undertimeMins:0,  status:'Late'},
+  {empId:3, date:'Jul 2', timeIn:'8:05 AM', timeOut:'5:00 PM', hours:7.92, ot:0, lateMins:5,  undertimeMins:0,  status:'Late'},
+  {empId:3, date:'Jul 3', timeIn:null,      timeOut:null,      hours:0,    ot:0, lateMins:0,  undertimeMins:0,  status:'Absent'},
+  {empId:3, date:'Jul 4', timeIn:'8:00 AM', timeOut:'4:30 PM', hours:7.5,  ot:0, lateMins:0,  undertimeMins:30, status:'Undertime'},
+  {empId:3, date:'Jul 6', timeIn:'8:15 AM', timeOut:'5:00 PM', hours:7.75, ot:0, lateMins:15, undertimeMins:0,  status:'Late'},
+  {empId:3, date:'Jul 7', timeIn:'8:00 AM', timeOut:'5:00 PM', hours:8,    ot:0, lateMins:0,  undertimeMins:0,  status:'Present'},
+
+  {empId:4, date:'Jul 1', timeIn:'7:58 AM', timeOut:'5:00 PM', hours:8, ot:0, lateMins:0, undertimeMins:0, status:'Present'},
+  {empId:4, date:'Jul 2', timeIn:'8:00 AM', timeOut:'5:00 PM', hours:8, ot:0, lateMins:0, undertimeMins:0, status:'Present'},
+  {empId:4, date:'Jul 3', timeIn:null,      timeOut:null,      hours:0, ot:0, lateMins:0, undertimeMins:0, status:'Absent'},
+  {empId:4, date:'Jul 4', timeIn:'7:55 AM', timeOut:'5:05 PM', hours:8, ot:0, lateMins:0, undertimeMins:0, status:'Present'},
+  {empId:4, date:'Jul 6', timeIn:'8:00 AM', timeOut:'5:00 PM', hours:8, ot:0, lateMins:0, undertimeMins:0, status:'Present'},
+  {empId:4, date:'Jul 7', timeIn:'7:59 AM', timeOut:'5:01 PM', hours:8, ot:0, lateMins:0, undertimeMins:0, status:'Present'},
 ];
+// Today (Jul 8) — starts "not yet clocked in"; filled in live via the Attendance tab.
+employees.forEach(e=>attendanceLog.push({empId:e.id, date:'Jul 8', timeIn:null, timeOut:null, hours:0, ot:0, lateMins:0, undertimeMins:0, status:'Not clocked in'}));
+
 let payrollReleased = false;
 let activeHrTab = 'emp';
 const HR_TABS = [['emp','👥 Employees'],['att','🕒 Attendance'],['pay','💰 Payroll Run']];
@@ -1504,6 +1678,79 @@ function deductions(gross){
   const tax = taxBase*0.15;
   return {sss, phic, hdmf, tax, total: sss+phic+hdmf+tax};
 }
+function fmtClock(d){ return d.toLocaleTimeString('en-PH',{hour:'numeric',minute:'2-digit',hour12:true}); }
+function minsOfDay(d){ return d.getHours()*60+d.getMinutes(); }
+function attStatusBadge(st){
+  const map={Present:'b-good',Late:'b-warn',Undertime:'b-warn',Absent:'b-bad','Not clocked in':'b-brand'};
+  return `<span class="badge ${map[st]||'b-brand'}">${st}</span>`;
+}
+function empCutoffStats(empId){
+  const recs=attendanceLog.filter(a=>a.empId===empId);
+  const hours=recs.reduce((a,r)=>a+r.hours,0);
+  const ot=recs.reduce((a,r)=>a+r.ot,0);
+  const lateMins=recs.reduce((a,r)=>a+r.lateMins,0);
+  const undertimeMins=recs.reduce((a,r)=>a+r.undertimeMins,0);
+  const daysAbsent=recs.filter(r=>r.status==='Absent').length;
+  return {hours, ot, regularHours:hours-ot, lateMins, undertimeMins, daysAbsent};
+}
+function empGrossPay(empId){
+  const e=employees.find(x=>x.id===empId);
+  const s=empCutoffStats(empId);
+  const hourly=e.rate/8;
+  const regularPay=s.regularHours*hourly;
+  const otPay=s.ot*hourly*1.25;
+  const tardinessDeduction=((s.lateMins+s.undertimeMins)/60)*hourly;
+  const gross=Math.max(regularPay+otPay-tardinessDeduction,0);
+  return {...s, hourly, regularPay, otPay, tardinessDeduction, gross};
+}
+function simTime(baseMins, varianceMins){
+  const t=Math.max(0, baseMins + Math.round((Math.random()*2-1)*varianceMins));
+  const d=new Date(); d.setHours(Math.floor(t/60), t%60, 0, 0);
+  return d;
+}
+function clockIn(empId){
+  const rec=attendanceLog.find(a=>a.empId===empId && a.date==='Jul 8');
+  if(!rec || rec.timeIn){ toast('Already clocked in today'); return; }
+  // Punch time is simulated close to the 8:00 AM schedule (mostly on-time, occasionally a few minutes late)
+  // so the walkthrough stays realistic no matter what time this is actually clicked during a demo.
+  const inDate=simTime(SHIFT_START, 12);
+  rec._inDate=inDate;
+  rec._inMins=minsOfDay(inDate);
+  rec.timeIn=fmtClock(inDate);
+  rec.lateMins=Math.max(0, rec._inMins-SHIFT_START);
+  rec.status=rec.lateMins>0?'Late':'Present';
+  const e=employees.find(x=>x.id===empId);
+  toast(e.name+' clocked in at '+rec.timeIn+(rec.lateMins>0?' — '+rec.lateMins+' min late':' — on time'));
+  renderHR();
+}
+function clockOut(empId){
+  const rec=attendanceLog.find(a=>a.empId===empId && a.date==='Jul 8');
+  if(!rec || !rec.timeIn){ toast('Time in first'); return; }
+  if(rec.timeOut){ toast('Already clocked out today'); return; }
+  const outDate=simTime(SHIFT_END, 20); // mostly on-time end-of-shift, occasional overtime
+  const outMins=minsOfDay(outDate);
+  let span=outMins-rec._inMins;
+  if(span<0) span+=24*60;
+  const worked=Math.max(span-(span>5*60?BREAK_MINS:0),0);
+  rec.timeOut=fmtClock(outDate);
+  rec.hours=Math.round((worked/60)*100)/100;
+  rec.ot=Math.round(Math.max(rec.hours-8,0)*100)/100;
+  rec.undertimeMins=Math.max(0, SHIFT_END-outMins);
+  rec.status = rec.lateMins>0 ? 'Late' : (rec.undertimeMins>0 ? 'Undertime' : 'Present');
+  const e=employees.find(x=>x.id===empId);
+  toast(e.name+' clocked out — '+rec.hours+'h logged'+(rec.ot>0?' (+'+rec.ot+'h OT)':''));
+  renderHR();
+}
+function showTimeLog(empId){
+  const e=employees.find(x=>x.id===empId);
+  const recs=attendanceLog.filter(a=>a.empId===empId);
+  $('#tlogEmpTitle').textContent='Time log — '+e.name;
+  $('#tlogEmpTable').innerHTML='<tr><th>Date</th><th>Time in</th><th>Time out</th><th class="ta-r">Hours</th><th>Status</th></tr>'+
+    recs.map(r=>`<tr><td>${r.date}</td><td class="num">${r.timeIn||'—'}</td><td class="num">${r.timeOut||'—'}</td>
+    <td class="ta-r num">${r.hours?r.hours.toFixed(2)+'h'+(r.ot?' (+'+r.ot.toFixed(2)+' OT)':''):'—'}</td>
+    <td>${attStatusBadge(r.status)}</td></tr>`).join('');
+  $('#tlogEmpOverlay').classList.add('show');
+}
 function applyHrGate(){
   const pro = plan==='Enterprise';
   $('#hrPro').style.display = pro?'block':'none';
@@ -1515,86 +1762,103 @@ function renderHR(){
   applyHrGate();
   if(plan!=='Enterprise') return;
   renderHrTabs();
-  const gross = employees.reduce((a,e)=>a+e.rate*e.days,0);
-  const dedAll = employees.reduce((a,e)=>a+deductions(e.rate*e.days).total,0);
-  const net = gross-dedAll;
-  const thirteenth = employees.reduce((a,e)=>a+(e.rate*e.days)/12,0)*1; // accrual this cutoff
-  /* employees */
+  const payAll=employees.map(e=>({e, p:empGrossPay(e.id)}));
+  const gross=payAll.reduce((a,x)=>a+x.p.gross,0);
+  const dedAll=payAll.reduce((a,x)=>a+deductions(x.p.gross).total,0);
+  const net=gross-dedAll;
+  const thirteenth=gross/12;
+  /* KPIs */
   $('#hrKpis').innerHTML = `
     <div class="card kpi"><div class="lbl">Headcount</div><div class="val num">${employees.length}</div><div class="dl">${employees.filter(e=>e.status==='Regular').length} regular · ${employees.filter(e=>e.status!=='Regular').length} probationary</div></div>
-    <div class="card kpi"><div class="lbl">Payroll cost · this cutoff</div><div class="val num">${peso0(gross)}</div><div class="dl">Gross, before deductions</div></div>
+    <div class="card kpi"><div class="lbl">Payroll cost · this cutoff</div><div class="val num">${peso0(gross)}</div><div class="dl">Gross, from actual hours worked</div></div>
     <div class="card kpi"><div class="lbl">13th month accrued</div><div class="val num">${peso0(thirteenth)}</div><div class="dl">Auto-set aside this cutoff</div></div>`;
-  $('#empTable').innerHTML = '<tr><th>Employee</th><th>Role</th><th>Status</th><th class="ta-r">Daily rate</th><th class="ta-r">Days (cutoff)</th></tr>'+
-    employees.map(e=>`<tr><td class="pname">${e.name}</td><td>${e.role}</td>
+  /* Employee directory */
+  $('#empTable').innerHTML = '<tr><th>Employee</th><th>Role</th><th>Status</th><th class="ta-r">Daily rate</th><th class="ta-r">Hours (cutoff)</th><th class="ta-r"></th></tr>'+
+    payAll.map(({e,p})=>`<tr><td class="pname">${e.name}</td><td>${e.role}</td>
     <td><span class="badge ${e.status==='Regular'?'b-good':'b-warn'}">${e.status}</span></td>
     <td class="ta-r num">${peso(e.rate)}</td>
-    <td class="ta-r"><span class="qty" style="justify-content:flex-end"><button class="iconb" onclick="chDays(${e.id},-1)">−</button><b class="num">${e.days}</b><button class="iconb" onclick="chDays(${e.id},1)">＋</button></span></td></tr>`).join('');
-  /* attendance */
-  const present = attendance.filter(a=>a.st==='Present'||a.st==='Late').length;
+    <td class="ta-r num">${p.hours.toFixed(2)}h${p.ot?` <span class="badge b-brand">+${p.ot.toFixed(2)} OT</span>`:''}${p.daysAbsent?` <span class="badge b-bad">${p.daysAbsent} absent</span>`:''}</td>
+    <td class="ta-r"><button class="btn btn-sm btn-o" onclick="showTimeLog(${e.id})">View log</button></td></tr>`).join('');
+  /* Attendance — live Time In / Time Out for today */
+  const todayRecs=employees.map(e=>({e, rec:attendanceLog.find(a=>a.empId===e.id && a.date==='Jul 8')}));
+  const clockedIn=todayRecs.filter(x=>x.rec.timeIn).length;
+  const lateToday=todayRecs.filter(x=>x.rec.status==='Late').length;
   $('#attKpis').innerHTML = `
-    <div class="card kpi"><div class="lbl">Present today</div><div class="val num">${present}/${attendance.length}</div><div class="dl up">On the floor</div></div>
-    <div class="card kpi"><div class="lbl">Late today</div><div class="val num">${attendance.filter(a=>a.st==='Late').length}</div><div class="dl wr">Auto-deducted per policy</div></div>
+    <div class="card kpi"><div class="lbl">Clocked in today</div><div class="val num">${clockedIn}/${employees.length}</div><div class="dl up">Live</div></div>
+    <div class="card kpi"><div class="lbl">Late today</div><div class="val num">${lateToday}</div><div class="dl wr">Auto-deducted per policy</div></div>
     <div class="card kpi"><div class="lbl">Next payday</div><div class="val">Jul 15</div><div class="dl">Semi-monthly schedule</div></div>`;
-  $('#attTable').innerHTML = '<tr><th>Employee</th><th>Time in</th><th>Time out</th><th>Status</th></tr>'+
-    attendance.map(a=>`<tr><td class="pname">${a.name}</td><td class="num">${a.tin}</td><td class="num">${a.tout}</td>
-    <td><span class="badge ${a.st==='Present'?'b-good':a.st==='Late'?'b-warn':'b-brand'}">${a.st}</span></td></tr>`).join('');
-  /* payroll */
+  $('#attTable').innerHTML = '<tr><th>Employee</th><th>Time in</th><th>Time out</th><th>Status</th><th class="ta-r">Action</th></tr>'+
+    todayRecs.map(({e,rec})=>{
+      let action;
+      if(!rec.timeIn) action=`<button class="btn btn-sm btn-p" onclick="clockIn(${e.id})">Time In</button>`;
+      else if(!rec.timeOut) action=`<button class="btn btn-sm btn-o" onclick="clockOut(${e.id})">Time Out</button>`;
+      else action=`<span class="note">Done · ${rec.hours.toFixed(2)}h</span>`;
+      return `<tr><td class="pname">${e.name}</td><td class="num">${rec.timeIn||'—'}</td><td class="num">${rec.timeOut||'—'}</td>
+      <td>${attStatusBadge(rec.status)}</td><td class="ta-r">${action}</td></tr>`;
+    }).join('');
+  /* Payroll */
   $('#payKpis').innerHTML = `
     <div class="card kpi"><div class="lbl">Total gross</div><div class="val num">${peso0(gross)}</div><div class="dl">${employees.length} employees</div></div>
     <div class="card kpi"><div class="lbl">Total deductions</div><div class="val num" style="color:var(--bad)">−${peso0(dedAll)}</div><div class="dl">SSS · PhilHealth · Pag-IBIG · tax</div></div>
     <div class="card kpi"><div class="lbl">Total net pay</div><div class="val num" style="color:var(--good)">${peso0(net)}</div><div class="dl ${payrollReleased?'up':'wr'}">${payrollReleased?'Released ✓':'For approval'}</div></div>`;
-  $('#payrollTable').innerHTML = '<tr><th>Employee</th><th class="ta-r">Gross</th><th class="ta-r">SSS</th><th class="ta-r">PhilHealth</th><th class="ta-r">Pag-IBIG</th><th class="ta-r">Tax</th><th class="ta-r">Net pay</th><th class="ta-r"></th></tr>'+
-    employees.map(e=>{const g=e.rate*e.days,d=deductions(g);
-    return `<tr><td class="pname">${e.name}<br><span class="psku">${e.role} · ${e.days} days</span></td>
-      <td class="ta-r num">${peso0(g)}</td><td class="ta-r num" style="color:var(--muted)">${peso0(d.sss)}</td>
+  $('#payrollTable').innerHTML = '<tr><th>Employee</th><th class="ta-r">Late/UT deduction</th><th class="ta-r">Gross</th><th class="ta-r">SSS</th><th class="ta-r">PhilHealth</th><th class="ta-r">Pag-IBIG</th><th class="ta-r">Tax</th><th class="ta-r">Net pay</th><th class="ta-r"></th></tr>'+
+    payAll.map(({e,p})=>{const d=deductions(p.gross);
+    return `<tr><td class="pname">${e.name}<br><span class="psku">${e.role} · ${p.regularHours.toFixed(1)}h reg${p.ot?' + '+p.ot.toFixed(1)+'h OT':''}</span></td>
+      <td class="ta-r num" style="color:${p.tardinessDeduction?'var(--bad)':'var(--muted)'}">${p.tardinessDeduction?'−'+peso0(p.tardinessDeduction):'—'}</td>
+      <td class="ta-r num">${peso0(p.gross)}</td>
+      <td class="ta-r num" style="color:var(--muted)">${peso0(d.sss)}</td>
       <td class="ta-r num" style="color:var(--muted)">${peso0(d.phic)}</td><td class="ta-r num" style="color:var(--muted)">${peso0(d.hdmf)}</td>
       <td class="ta-r num" style="color:var(--muted)">${peso0(d.tax)}</td>
-      <td class="ta-r num"><b>${peso0(g-d.total)}</b></td>
+      <td class="ta-r num"><b>${peso0(p.gross-d.total)}</b></td>
       <td class="ta-r"><button class="btn btn-sm btn-o" onclick="showPayslip(${e.id})">Payslip</button></td></tr>`;}).join('');
 }
-function chDays(id,d){const e=employees.find(x=>x.id===id);e.days=Math.min(Math.max(e.days+d,0),13);renderHR();}
 function addEmp(){
   const n=$('#emName').value.trim(),r=$('#emRole').value.trim(),rt=+$('#emRate').value;
   if(!n||!rt){toast('Name and daily rate are required');return;}
-  employees.push({id:Date.now(),name:n,role:r||'Staff',rate:rt,days:0,status:'Probationary'});
-  attendance.push({name:n,tin:'—',tout:'—',st:'Rest day'});
+  const id=Date.now();
+  employees.push({id,name:n,role:r||'Staff',rate:rt,status:'Probationary'});
+  attendanceLog.push({empId:id,date:'Jul 8',timeIn:null,timeOut:null,hours:0,ot:0,lateMins:0,undertimeMins:0,status:'Not clocked in'});
   ['emName','emRole','emRate'].forEach(i=>$('#'+i).value='');
   toast(n+' added to payroll');renderHR();
 }
 function runPayroll(){
   if(payrollReleased){toast('Payroll for this cutoff is already released');return;}
   payrollReleased=true;
-  const net=employees.reduce((a,e)=>{const g=e.rate*e.days;return a+g-deductions(g).total;},0);
-  const gross=employees.reduce((a,e)=>a+e.rate*e.days,0);
+  const payAll=employees.map(e=>empGrossPay(e.id));
+  const gross=payAll.reduce((a,p)=>a+p.gross,0);
+  const net=payAll.reduce((a,p)=>a+p.gross-deductions(p.gross).total,0);
   expenses.unshift({d:'Jul 8',desc:'Payroll — Jul 1-15 cutoff',cat:'Salaries',amt:Math.round(gross)});
-  cashFlow.unshift({t:'Jul 8',desc:'Payroll release (net)',in:0,out:Math.round(net)});
+  cashFlow.unshift({d:8,t:'Jul 8',desc:'Payroll release (net)',in:0,out:Math.round(net)});
   cashOnHand-=Math.round(net);
   toast('Payroll released — '+peso0(net)+' net · booked to Salaries expense');
   renderHR();renderFin();renderDash();
 }
 function showPayslip(id){
   const e=employees.find(x=>x.id===id);
-  const g=e.rate*e.days,d=deductions(g);
+  const p=empGrossPay(id), d=deductions(p.gross);
   $('#psBody').innerHTML=`
     <div class="rc-head"><div class="rc-logo">${bizLogoInner()}</div><div class="rc-bn">${$('#bizName').value}</div>
     <div style="font-size:10.5px;color:#777">PAYSLIP · Cutoff Jul 1–15, 2026 · Payday Jul 15</div></div><hr>
     <div class="rl"><span><b>${e.name}</b></span><span>${e.role}</span></div>
     <div class="rl"><span>Status</span><span>${e.status}</span></div><hr>
-    <div class="rl"><span>Basic pay (${e.days} days × ${peso0(e.rate)})</span><span class="num">${peso(g)}</span></div>
-    <div class="rl tot"><span>GROSS PAY</span><span class="num">${peso(g)}</span></div><hr>
+    <div class="rl"><span>Regular hours (${p.regularHours.toFixed(2)}h × ${peso0(p.hourly)})</span><span class="num">${peso(p.regularPay)}</span></div>
+    ${p.ot?`<div class="rl"><span>Overtime (${p.ot.toFixed(2)}h × 1.25)</span><span class="num">${peso(p.otPay)}</span></div>`:''}
+    ${p.tardinessDeduction?`<div class="rl"><span>Late / undertime (${p.lateMins+p.undertimeMins} min)</span><span class="num">−${peso(p.tardinessDeduction)}</span></div>`:''}
+    ${p.daysAbsent?`<div class="rl"><span>Absences this cutoff</span><span class="num">${p.daysAbsent} day(s)</span></div>`:''}
+    <div class="rl tot"><span>GROSS PAY</span><span class="num">${peso(p.gross)}</span></div><hr>
     <div class="rl"><span>SSS (EE share)</span><span class="num">−${peso(d.sss)}</span></div>
     <div class="rl"><span>PhilHealth (EE share)</span><span class="num">−${peso(d.phic)}</span></div>
     <div class="rl"><span>Pag-IBIG</span><span class="num">−${peso(d.hdmf)}</span></div>
     <div class="rl"><span>Withholding tax (est.)</span><span class="num">−${peso(d.tax)}</span></div>
     <div class="rl"><span>Total deductions</span><span class="num">−${peso(d.total)}</span></div><hr>
-    <div class="rl tot"><span>NET PAY</span><span class="num">${peso(g-d.total)}</span></div>
-    <div class="rc-foot">13th-month accrued this cutoff: ${peso0(g/12)} · Powered by Go NegosyoOS</div>`;
+    <div class="rl tot"><span>NET PAY</span><span class="num">${peso(p.gross-d.total)}</span></div>
+    <div class="rc-foot">13th-month accrued this cutoff: ${peso0(p.gross/12)} · Powered by Go NegosyoOS</div>`;
   $('#psOverlay').classList.add('show');
 }
 
 /* ================= BRANDING ENGINE (the white-label heart) ================= */
 const PRESETS=[
-  {n:'Barako Teal', d:'The Go NegosyoOS default', b:'#0E5F58', a:'#E8A33D', name:'Barako Coffee Co.', init:'BC'},
+  {n:'Umaga Trust', d:'The Go NegosyoOS default', b:'#1B5FA8', a:'#16A34A', name:'Umaga Coffee Co.', init:'UC'},
   {n:'Pharma Fresh', d:'Clean & clinical retail', b:'#0B7A4B', a:'#5FC08B', name:'Farmacia Buhay', init:'FB'},
   {n:'Athletic Bold', d:'Sportswear & apparel', b:'#B3202C', a:'#F5B301', name:'MNG Sportswear', init:'MG'},
   {n:'Express Blue', d:'Logistics & delivery', b:'#0F4C81', a:'#F28C28', name:'Lighthouse Express', init:'LE'},
@@ -1607,6 +1871,15 @@ function mix(h,pct,to=[0,0,0]){const c=hexToRgb(h);return '#'+c.map((v,i)=>Math.
 let brandLogoUrl=null;
 function bizLogoInner(){
   return brandLogoUrl ? `<img src="${brandLogoUrl}" alt="logo">` : ($('#bizInit').value||'YB').toUpperCase();
+}
+function autoDeriveInitials(){
+  const name=$('#bizName').value.trim();
+  if(!name){ toast('Enter a business name first'); return; }
+  const initials=name.split(/\s+/).filter(Boolean).map(w=>w[0]).join('').toUpperCase().slice(0,5);
+  if(!initials){ toast('Could not derive initials from that name'); return; }
+  $('#bizInit').value=initials;
+  applyBrand();
+  toast('Initials set to "'+initials+'" from business name');
 }
 function handleLogoUpload(evt){
   const file=evt.target.files[0];
